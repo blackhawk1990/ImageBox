@@ -1,0 +1,61 @@
+<script>
+    
+    $(function(){
+        $('#newses').accordion({
+            collapsible: true,
+            active : false,
+            autoHeight : false,
+            header : "> div > div > h2"
+        });
+        
+        $('#newses').sortable({
+            handle : "h2",
+            items : ".news",
+            axis : "y"
+        });
+        
+        $('.news .news-opt').each(function(){
+            $(this).css('padding-top', (($(this).siblings('.news-content').children('h2').innerHeight() / 2) - 5) + 'px');
+        });
+        
+        $('.news').css('border', 'none');
+    });
+    
+</script>
+
+<?php
+
+    $auth = Zend_Auth::getInstance();
+    
+    if($auth->hasIdentity())
+    {
+        echo "<p>Witaj ".$auth->getIdentity()."! <a href = \"".$this->url(array('controller' => 'auth','action' => 'logout'))."\">Wyloguj</a></p>";
+    }
+    else
+    {
+        echo "<p><a href = \"".$this->url(array('action' => 'index', 'controller' => 'auth'))."\">Zaloguj</a></p>";
+    }
+    echo "<div id = \"newses\">";
+    foreach($this->newses as $news)
+    {
+        echo "<div class = \"news\">";
+            echo "<div class = \"news-content\">";
+                echo "<h2><a href = \"#\">".$news['tytul']."</a></h2>";
+                echo "<div>";
+                    echo "<p>".$news['tekst']."</p>";
+                    echo "<h3>".$news['autor']."</h3>";
+                    echo "<h4>Dodano: ".$news['data']."</h4>";
+                echo "</div>";
+            echo "</div>";
+            echo "<div class = \"news-opt\">";
+                echo "<a class = \"admin-opt\" href = \"".$this->url(array('controller' => 'news','action' => 'edit','id'=>$news['id']))."\"><img src = \"".$this->baseUrl."/styles/img/edit.png\" alt = \"Edytuj\" /></a>";
+                echo "<a class = \"admin-opt\" href = \"".$this->url(array('controller' => 'news','action' => 'delete','id'=>$news['id']))."\"><img src = \"".$this->baseUrl."/styles/img/delete.png\" alt = \"Usuń\" /></a>";
+            echo "</div>";
+        echo "</div>";
+    }
+    echo "</div>";
+    
+    echo "<div id = \"all-admin-opt\">";
+        echo "<a class = \"admin-opt\" href = \"".$this->url(array('controller' => 'news','action' => 'add'))."\"><img src = \"".$this->baseUrl."/styles/img/add.png\" alt = \"Dodaj\" /></a>";
+    echo "</div>";
+?>
