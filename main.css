@@ -1,0 +1,137 @@
+﻿/*
+      Created by Keith Donegan of Code-Sucks.com
+	  
+	  E-Mail: Keithdonegan@gmail.com
+	  
+	  You can do whatever you want with these layouts,
+	  but it would be greatly appreciated if you gave a link
+	  back to http://www.code-sucks.com
+	  
+*/
+
+* { padding: 0; margin: 0; }
+
+body {
+ font-family: Arial, Helvetica, sans-serif;
+ font-size: 13px;
+}
+#box{ 
+ margin: 0 auto;
+ width: 1100px;
+ overflow:hidden;
+}
+
+#content
+{
+	margin:0 auto;
+	width:1000px;
+	overflow:hidden;
+}
+
+#news {
+ color: black;
+ width: 1000px;
+ float: left;
+ padding: 0px;
+ border: 0px solid #ccc;
+ height: 100px;
+ margin: 5px 0px 0px 0px;
+}
+#header {
+ color: black;
+ width: 1000px;
+ float: left;
+ padding: 0px;
+ border: 0px solid #ccc;
+ height: auto;
+ margin: 0px 0px 0px 0px;
+}
+#logo {
+ color: #333;
+ width: 450px;
+ float: left;
+ padding: 0px;
+ border: 0px solid #ccc;
+ height: 50px;
+ margin: 29px 0px 0px 0px;
+}
+#logo2 {
+ color: #333;
+ width: 450px;
+ float: right;
+ padding: 0px;
+ border: 0px solid #ccc;
+ height: 100px;
+ margin: 5px 0px 0px 0px;
+ background: red;
+}
+#logon { 
+ color: #333;
+ border: 0px solid orange;
+ margin: 15px 0px 0px 0px;
+ padding: 0px;
+ height: 427px;
+ width: 350px;
+ float: left;
+}
+#dandd { 
+ float: left;
+ color: #333;
+ border: 0px solid red;
+ background: #E7DBD5;
+ margin: 15px 0px 0px 0px;
+ padding: 0px;
+ height: 427px;
+ width: 650px;
+
+}
+#stopka{ 
+ float: left;
+ color: #333;
+ border: 0px solid red;
+
+ margin: 15px 0px 0px 0px;
+ padding: 0px;
+ height: 20px;
+ width: 1000px;
+}
+#copyright{ 
+ float: left;
+ color: #333;
+ border: 0px solid red;
+
+ margin: 15px 0px 0px 0px;
+ padding: 0px;
+ height: 20px;
+ width: 1000px;
+}
+h1
+{
+font-family:arial, verdana, helvetica, sans-serif;
+font-size:3.0em; 
+font-weight: normal;
+color:orange;
+padding-left:5px;
+line-height:1.6em;
+text-align:center;
+}
+h2
+{
+font-family:arial, verdana, helvetica, sans-serif;
+font-size:1.5em; 
+font-weight: normal;
+color:orange;
+padding-left:5px;
+line-height:1.0em;
+text-align:center;
+}
+h3
+{
+font-family:arial, verdana, helvetica, sans-serif;
+font-size:0.7em; 
+font-weight: normal;
+color:black;
+padding-left:5px;
+line-height:1.0em;
+text-align:left;
+}
