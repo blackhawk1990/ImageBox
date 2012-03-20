@@ -1,0 +1,127 @@
+<?php echo $this->doctype(); ?>
+
+<html lang = "pl">
+    
+    <head>
+        
+        <?php 
+            echo $this->headMeta()."\n";
+            echo $this->headTitle()."\n";
+            echo $this->headLink()."\n";
+            echo $this->headScript()."\n";
+        ?>
+        
+    </head>
+    
+    <body>
+        
+        <div id="fb-root"></div>
+        <script>(function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/pl_PL/all.js#xfbml=1&appId=APP_ID";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));</script>
+        
+        <div id="box">
+        
+            <div id="content">
+            
+                <div id="header">
+                    <a href = "<?php echo $this->baseUrl() ?>">
+                        <div id="logo">
+                            <lg>ImageBox</lg>
+                        </div>
+                    </a>
+                </div>
+                <div id="news">
+                    <h1>Upload and share your files instantly.</h1>
+                    <h2>Photos, music, videos, and documents all in one place.</h1>
+                    
+                </div>
+                
+                <div id="columns">
+                    <div id="dandd">
+                    
+                        <a href="#">Drag & Drop</a>
+                        
+                        <?php
+                        echo $this->layout()->content;
+                        ?>
+                    </div>
+                    
+                    
+                    
+                    <div id="logon">
+                        <div id="normal-login">
+                            <?php
+                            $ident = Zend_Auth::getInstance();
+
+                            if (!$ident->hasIdentity()) {
+                                echo $this->form;
+                                echo "<div style=\"text-align:center\">" . $this->logerror . "</div>";
+                            } else {
+                                echo "<div id=\"log-status\">";
+                                echo "<p style=\"text-align:center\">Witaj " . $ident->getIdentity() . "! <a href = \"" . $this->url(array('controller' => 'auth', 'action' => 'logout')) . "\">Wyloguj</a></p>";
+                                //$storage = new Zend_Session_Namespace('user_role');
+                                //echo "Rola:".$storage->role;
+                                echo "</div>";
+                            }
+                            ?>
+                        </div>
+                        
+                        <?php if (!$ident->hasIdentity()) : ?>
+                            <iframe src="https://www.facebook.com/plugins/registration?
+                                    client_id=113869198637480&
+                                    redirect_uri=https%3A%2F%2Fdevelopers.facebook.com%2Ftools%2Fecho%2F&
+                                    fields=name,birthday,gender,location,email"
+                                    scrolling="auto"
+                                    frameborder="no"
+                                    style="border:none"
+                                    allowTransparency="true"
+                                    width="100%"
+                                    height="350">
+                            </iframe>
+                        <?php else : ?>
+                            <?php
+                                $storage = new Zend_Session_Namespace('user_data');
+                                $id = $storage->id;
+                            ?>
+                            <div id="user-opts">
+                                <table>
+                                    <tr>
+                                        <td><?php echo "<a class = \"user-opt\" href = \"" . $this->url(array('controller' => 'file', 'action' => 'upload'), 'upload') . "\"><img src = \"" . $this->baseUrl() . "/styles/img/upload.png\" alt = \"Wrzuć plik z dysku\" /></a>" ?></td>
+                                        <td>Wrzuć plik z dysku</td>
+                                    </tr>
+                                    <tr>
+                                        <td><?php echo "<a class = \"user-opt\" href = \"" . $this->url(array('controller' => 'file', 'action' => 'collection', 'id' => $id), 'collection') . "\"><img src = \"" . $this->baseUrl() . "/styles/img/list.png\" alt = \"Kolekcja\" /></a>" ?></td>
+                                        <td>Kolekcja</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                
+                
+                <div id="stopka">
+                
+                    <h2>
+                        Sophisticated, yet simple.  Share in private and public, anywhere you go.  Start your Minus today</h2>	
+                        
+                </div>
+                <div id="copyright">
+                
+                    <h3>
+                        <b>&copy; IMAGEBOX 2012 - Save U Image</b></h3>	
+                        
+                </div>
+                
+            </div>
+            
+        </div>
+        
+    </body>
+    
+</html>

@@ -1,0 +1,29 @@
+<script type = "text/javascript">
+
+    $(function(){
+        
+        if($.browser.msie && parseInt($.browser.version, 10) < 9)
+        {
+            $('#logform').css('border', 'solid dashed #000');
+            
+            $('#logform .logowanie').css('border', 'none');
+            
+//            $('#logform .logowanie').hover(function(){
+//                    $(this).css({'border' : 'solid 3px rgb(255, 180, 0)', 'margin' : '3px 0 0 0'});
+//                },
+//                function(){
+//                    $(this).css({'border' : 'none', 'margin' : '3px 0 0 0'}); 
+//            });
+            
+            $('#logform .logowanie').focusin(function(){
+                $(this).css('border', 'solid 3px rgb(255, 180, 0)');
+            });
+            
+            $('#logform .logowanie').focusout(function(){
+                $(this).css('border', 'none');
+            });
+        }
+        
+    });
+
+</script>
