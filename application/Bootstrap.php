@@ -17,6 +17,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headLink()->appendStylesheet($front->getBaseUrl().'/public/styles/default.css');
         $view->headLink()->appendStylesheet($front->getBaseUrl().'/public/styles/page.css');
         $view->headLink()->appendStylesheet($front->getBaseUrl().'/public/styles/fonts.css');
+        $view->headLink()->appendStylesheet($front->getBaseUrl().'/public/styles/forms.css');
         $view->headLink()->appendStylesheet($front->getBaseUrl().'/public/styles/ui/jquery-ui-1.8.16.custom.css');
         //tytul
         $view->headTitle()->append('ImageBox - Save U Image');

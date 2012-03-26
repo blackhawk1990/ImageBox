@@ -31,10 +31,17 @@ class AuthController extends Zend_Controller_Action
             
             $validation = new Zend_Auth_Adapter_DbTable(
                     null,
-                    'users',
-                    'login',
+                    'Users',
+                    'nick',
                     'password'
-            );
+            ); //na hosting
+            
+//            $validation = new Zend_Auth_Adapter_DbTable(
+//                    null,
+//                    'users',
+//                    'login',
+//                    'password'
+//            );
             
             if($login != '')
             {
@@ -49,11 +56,13 @@ class AuthController extends Zend_Controller_Action
                 {
                     //utworzenie obiektu tabeli uzytkownikow z bazy danych
                     $user = new App_Model_User();
-                    $user_data = $user->fetchRow($user->select('role')->where('login=\'' . $this->_auth->getIdentity() . '\' AND password=\'' . md5($password) . '\''));
+                    $user_data = $user->fetchRow($user->select('rola,users_id')->where('nick=\'' . $this->_auth->getIdentity() . '\' AND password=\'' . md5($password) . '\''));
                     //zapisanie roli do sesji
-                    $this->storage->role = $user_data['role'];
+                    $this->storage->role = $user_data['rola'];
+                    //zapisanie id do sesji
+                    $this->storage->id = $user_data['users_id'];
                     //$this->view->user_data = $validation->getResultRowObject();
-                    $this->_helper->redirector('index', 'index');
+                    $this->_helper->redirector('profile', 'user', array('id' => $user_data['id']));
                 }
                 else
                 {
@@ -66,13 +75,13 @@ class AuthController extends Zend_Controller_Action
                     {
                         //utworzenie obiektu tabeli uzytkownikow z bazy danych
                         $user = new App_Model_User();
-                        $user_data = $user->fetchRow($user->select('role,id')->where('login=\''.$this->_auth->getIdentity().'\' AND password=\''.$password.'\''));
+                        $user_data = $user->fetchRow($user->select('rola,users_id')->where('nick=\''.$this->_auth->getIdentity().'\' AND password=\''.$password.'\''));
                         //zapisanie roli do sesji
-                        $this->storage->role = $user_data['role'];
+                        $this->storage->role = $user_data['rola'];
                         //zapisanie id do sesji
-                        $storage->id = $user_data['id'];
+                        $this->storage->id = $user_data['users_id'];
                         
-                        $this->_helper->redirector('index', 'index');
+                        $this->_helper->redirector('profile', 'user', array('id' => $user_data['id']));
                     }
 
                     $this->view->logerror = "Nieprawidłowy login i/lub hasło!";

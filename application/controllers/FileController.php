@@ -15,11 +15,45 @@ class FileController extends Zend_Controller_Action
 
     public function uploadAction()
     {
-        // action body
+        $request = $this->getRequest();
+        
+        $this->view->upload_form = '';
+        
+        $this->view->headLink()->appendStylesheet($this->_request->getBaseUrl().'/styles/ui/upload.css');
+        $this->view->headScript()->appendFile($this->_request->getBaseUrl().'/js/upload.js');
+        $this->view->headScript()->appendScript("
+            $(function(){
+                $('#submit').click(function(){
+                    upload('upload-form', 'progress-bar', ".$request->getParam('id').");
+                });
+            });
+        ");
+      
+        $upload_form = new App_Form_Upload();
+        
+        if($request->isPost())
+        {
+            if(isset($_FILES['file']))
+            {
+                //jezeli katalog usera nie istnieje, zostaje utworzony
+                if(!file_exists("files/".$request->getParam('id')))
+                {
+                    mkdir("files/".$request->getParam('id'));
+                }
+                
+                move_uploaded_file($_FILES['file']['tmp_name'], "files/".$request->getParam('id')."/".$_FILES['file']['name']);
+                
+                $this->_helper->redirector->goToRoute(array('id' => $request->getParam('id')), 'collection');
+            }
+        }
+        else
+        {
+            $this->view->upload_form = $upload_form;
+        }
     }
 
     public function collectionAction()
-    {
+    {   
         $request = $this->getRequest();
         
         if($request->isGet())

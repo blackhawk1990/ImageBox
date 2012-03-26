@@ -1,0 +1,60 @@
+@import url(http://fonts.googleapis.com/css?family=Chivo);
+
+#progressbar
+{
+    float:left;
+    width:100px;
+    height:15px;
+    margin:10px 10px 10px 100px;
+}
+
+#prog-status
+{
+    float:left;
+    height:15px;
+    text-align:center;
+    margin:10px 10px 10px 0;
+}
+
+#percent
+{
+    float: left;
+    font-family: "Chivo", "Times New Roman", Arial;
+    font-size:12px;
+    margin-top:1.5px;
+}
+
+#up-speed
+{
+    float: left;
+    font-family: "Chivo", "Times New Roman", Arial;
+    font-size: 12px;
+    margin-top: 1.5px;
+    margin-left: 6px;
+}
+
+#file-info
+{
+    clear: both;
+    width: 80%;
+    height: 64px;
+    padding: 5px 2% 5px 2%;
+    margin: 0 auto;
+    background-color: orange;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #000000;
+    /*-webkit-box-shadow: 0 0 5px #000000;*/
+    font-family: "Chivo", "Times New Roman", Arial;
+    font-size: 14px;
+    text-align: center;
+}
+
+#close-but
+{
+    float: right;
+    width: 16px;
+    height: 16px;
+    border-radius: 13.5px;
+    background: url('images/close.png');
+    background-size: 100% 100%;
+}

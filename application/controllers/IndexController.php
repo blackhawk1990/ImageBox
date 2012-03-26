@@ -14,9 +14,9 @@ class IndexController extends Zend_Controller_Action
         //jezeli uzytkownik zalogowany pokazujemy glowna strone
         if($this->_auth->hasIdentity())
         {
-            $table = new App_Model_News();
-            $news = $table->fetchAll($table->select()->order('data DESC'));
-            $this->view->newses = $news;
+            //$table = new App_Model_News();
+            //$news = $table->fetchAll($table->select()->order('data DESC'));
+            //$this->view->newses = $news;
         }
         else //jesli nie przekierowujemy go do ekranu logowania
         {

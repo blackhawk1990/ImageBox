@@ -44,7 +44,7 @@
                 <div id="columns">
                     <div id="dandd">
                     
-                        <a href="#">Drag & Drop</a>
+                        <!--<a href="#">Drag & Drop</a>-->
                         
                         <?php
                         echo $this->layout()->content;
@@ -57,13 +57,15 @@
                         <div id="normal-login">
                             <?php
                             $ident = Zend_Auth::getInstance();
+                            $storage = new Zend_Session_Namespace('user_data');
+                            $id = $storage->id;
 
                             if (!$ident->hasIdentity()) {
                                 echo $this->form;
                                 echo "<div style=\"text-align:center\">" . $this->logerror . "</div>";
                             } else {
                                 echo "<div id=\"log-status\">";
-                                echo "<p style=\"text-align:center\">Witaj " . $ident->getIdentity() . "! <a href = \"" . $this->url(array('controller' => 'auth', 'action' => 'logout')) . "\">Wyloguj</a></p>";
+                                echo "<p style=\"text-align:center\">Witaj <a href=\"".$this->url(array('controller' => 'user', 'action' => 'profile', 'id' => $id), 'profile')."\">" . $ident->getIdentity() . "</a>! <a href = \"" . $this->url(array('controller' => 'auth', 'action' => 'logout'), 'logout') . "\">Wyloguj</a></p>";
                                 //$storage = new Zend_Session_Namespace('user_role');
                                 //echo "Rola:".$storage->role;
                                 echo "</div>";
@@ -84,18 +86,14 @@
                                     height="350">
                             </iframe>
                         <?php else : ?>
-                            <?php
-                                $storage = new Zend_Session_Namespace('user_data');
-                                $id = $storage->id;
-                            ?>
                             <div id="user-opts">
                                 <table>
                                     <tr>
-                                        <td><?php echo "<a class = \"user-opt\" href = \"" . $this->url(array('controller' => 'file', 'action' => 'upload'), 'upload') . "\"><img src = \"" . $this->baseUrl() . "/styles/img/upload.png\" alt = \"WrzuÄ‡ plik z dysku\" /></a>" ?></td>
-                                        <td>WrzuÄ‡ plik z dysku</td>
+                                        <td><?php echo "<a class = \"user-opt\" href = \"" . $this->url(array('controller' => 'file', 'action' => 'upload', 'id' => $id), 'upload') . "\"><img src = \"" . $this->baseUrl() . "/public/styles/img/upload.png\" alt = \"Wrzuæ plik z dysku\" /></a>" ?></td>
+                                        <td>Wrzuæ plik z dysku</td>
                                     </tr>
                                     <tr>
-                                        <td><?php echo "<a class = \"user-opt\" href = \"" . $this->url(array('controller' => 'file', 'action' => 'collection', 'id' => $id), 'collection') . "\"><img src = \"" . $this->baseUrl() . "/styles/img/list.png\" alt = \"Kolekcja\" /></a>" ?></td>
+                                        <td><?php echo "<a class = \"user-opt\" href = \"" . $this->url(array('controller' => 'file', 'action' => 'collection', 'id' => $id), 'collection') . "\"><img src = \"" . $this->baseUrl() . "/public/styles/img/list.png\" alt = \"Kolekcja\" /></a>" ?></td>
                                         <td>Kolekcja</td>
                                     </tr>
                                 </table>
