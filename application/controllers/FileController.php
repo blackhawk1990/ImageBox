@@ -19,8 +19,8 @@ class FileController extends Zend_Controller_Action
         
         $this->view->upload_form = '';
         
-        $this->view->headLink()->appendStylesheet($this->_request->getBaseUrl().'/styles/ui/upload.css');
-        $this->view->headScript()->appendFile($this->_request->getBaseUrl().'/js/upload.js');
+        $this->view->headLink()->appendStylesheet($this->_request->getBaseUrl().'/public/styles/ui/upload.css');
+        $this->view->headScript()->appendFile($this->_request->getBaseUrl().'/public/js/upload.js');
         $this->view->headScript()->appendScript("
             $(function(){
                 $('#submit').click(function(){

@@ -51,15 +51,15 @@
                         echo "</div>";
                     echo "</div>";
                     echo "<div class = \"news-opt\">";
-                        echo "<a class = \"admin-opt\" href = \"" . $this->url(array('controller' => 'news', 'action' => 'edit', 'id' => $news['id']), 'edit') . "\"><img src = \"" . $this->baseUrl . "/styles/img/edit.png\" alt = \"Edytuj\" /></a>";
-                        echo "<a class = \"admin-opt\" href = \"" . $this->url(array('controller' => 'news', 'action' => 'delete', 'id' => $news['id']), 'delete') . "\"><img src = \"" . $this->baseUrl . "/styles/img/delete.png\" alt = \"Usuń\" /></a>";
+                        echo "<a class = \"admin-opt\" href = \"" . $this->url(array('controller' => 'news', 'action' => 'edit', 'id' => $news['id']), 'edit') . "\"><img src = \"" . $this->baseUrl . "/public/styles/img/edit.png\" alt = \"Edytuj\" /></a>";
+                        echo "<a class = \"admin-opt\" href = \"" . $this->url(array('controller' => 'news', 'action' => 'delete', 'id' => $news['id']), 'delete') . "\"><img src = \"" . $this->baseUrl . "/public/styles/img/delete.png\" alt = \"Usuń\" /></a>";
                     echo "</div>";
                 echo "</div>";
             }
             echo "</div>";
 
             echo "<div id = \"all-admin-opt\">";
-                echo "<a class = \"admin-opt\" href = \"" . $this->url(array('controller' => 'news', 'action' => 'add'), 'add') . "\"><img src = \"" . $this->baseUrl . "/styles/img/add.png\" alt = \"Dodaj\" /></a>";
+                echo "<a class = \"admin-opt\" href = \"" . $this->url(array('controller' => 'news', 'action' => 'add'), 'add') . "\"><img src = \"" . $this->baseUrl . "/public/styles/img/add.png\" alt = \"Dodaj\" /></a>";
             echo "</div>";
         }
         else if(Zend_Registry::get('acl')->isAllowed($storage->role, 'news-read')) //samo czytanie newsow

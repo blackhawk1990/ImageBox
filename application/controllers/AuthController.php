@@ -56,13 +56,13 @@ class AuthController extends Zend_Controller_Action
                 {
                     //utworzenie obiektu tabeli uzytkownikow z bazy danych
                     $user = new App_Model_User();
-                    $user_data = $user->fetchRow($user->select('rola,users_id')->where('nick=\'' . $this->_auth->getIdentity() . '\' AND password=\'' . md5($password) . '\''));
+                    $user_data = $user->fetchRow($user->select('rola,userID')->where('nick=\'' . $this->_auth->getIdentity() . '\' AND password=\'' . md5($password) . '\''));
                     //zapisanie roli do sesji
                     $this->storage->role = $user_data['rola'];
                     //zapisanie id do sesji
-                    $this->storage->id = $user_data['users_id'];
+                    $this->storage->id = $user_data['userID'];
                     //$this->view->user_data = $validation->getResultRowObject();
-                    $this->_helper->redirector('profile', 'user', array('id' => $user_data['id']));
+                    $this->_helper->redirector('profile', 'user', array('id' => $user_data['userID']));
                 }
                 else
                 {
@@ -75,13 +75,13 @@ class AuthController extends Zend_Controller_Action
                     {
                         //utworzenie obiektu tabeli uzytkownikow z bazy danych
                         $user = new App_Model_User();
-                        $user_data = $user->fetchRow($user->select('rola,users_id')->where('nick=\''.$this->_auth->getIdentity().'\' AND password=\''.$password.'\''));
+                        $user_data = $user->fetchRow($user->select('rola,userID')->where('nick=\''.$this->_auth->getIdentity().'\' AND password=\''.$password.'\''));
                         //zapisanie roli do sesji
                         $this->storage->role = $user_data['rola'];
                         //zapisanie id do sesji
-                        $this->storage->id = $user_data['users_id'];
+                        $this->storage->id = $user_data['userID'];
                         
-                        $this->_helper->redirector('profile', 'user', array('id' => $user_data['id']));
+                        $this->_helper->redirector('profile', 'user', array('id' => $user_data['userID']));
                     }
 
                     $this->view->logerror = "Nieprawidłowy login i/lub hasło!";
