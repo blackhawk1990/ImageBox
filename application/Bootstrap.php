@@ -8,23 +8,23 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $front = $bootstrap->frontController;
         //$front->setBaseUrl('/~student94361/Korto2012/');
         //$front->setBaseUrl('/ImageBox/public/');
-        $front->setBaseUrl('');
+        $front->setBaseUrl('/');
         
         //layout settings
         $view = new Zend_View();
         $view->doctype('HTML5');
         $view->headMeta()->setCharset('UTF-8');
-        $view->headLink()->appendStylesheet($front->getBaseUrl().'/public/styles/default.css');
-        $view->headLink()->appendStylesheet($front->getBaseUrl().'/public/styles/page.css');
-        $view->headLink()->appendStylesheet($front->getBaseUrl().'/public/styles/fonts.css');
-        $view->headLink()->appendStylesheet($front->getBaseUrl().'/public/styles/forms.css');
-        $view->headLink()->appendStylesheet($front->getBaseUrl().'/public/styles/ui/jquery-ui-1.8.16.custom.css');
+        $view->headLink()->appendStylesheet($front->getBaseUrl().'public/styles/default.css');
+        $view->headLink()->appendStylesheet($front->getBaseUrl().'public/styles/page.css');
+        $view->headLink()->appendStylesheet($front->getBaseUrl().'public/styles/fonts.css');
+        $view->headLink()->appendStylesheet($front->getBaseUrl().'public/styles/forms.css');
+        $view->headLink()->appendStylesheet($front->getBaseUrl().'public/styles/ui/jquery-ui-1.8.16.custom.css');
         //tytul
         $view->headTitle()->append('ImageBox - Save U Image');
         
         //scripts
-        $view->headScript()->appendFile($front->getBaseUrl().'/public/js/jquery-1.7.min.js');
-        $view->headScript()->appendFile($front->getBaseUrl().'/public/js/jquery-ui-1.8.16.custom.min.js');
+        $view->headScript()->appendFile($front->getBaseUrl().'public/js/jquery-1.7.min.js');
+        $view->headScript()->appendFile($front->getBaseUrl().'public/js/jquery-ui-1.8.16.custom.min.js');
         
         //--------------przypisanie uprawnien do rol--------------//
         $acl = new Zend_Acl();

@@ -1,6 +1,6 @@
-//AJAXUPLOAD v 0.17
-//written by:Łukasz Traczewski (c) 2011
-//last modification: 09-11-2011
+//AJAXUPLOAD v 0.18
+//written by:Łukasz Traczewski (c) 2011-2012
+//last modification: 31-03-2012
 
 var i = 0;
 
@@ -10,6 +10,23 @@ var last_uploaded = 0;
 
 function upload(form_id, wrapper_id, user_id)
 {
+    //deleting elements(if they're exists) from last uploads
+    if($('#prog-status').length > 0)
+    {
+        $('#prog-status').remove();
+    }
+    
+    if($('#progressbar').length > 0)
+    {
+        $('#progressbar').remove();
+    }
+                    
+    if($('#file-info').length > 0)
+    {
+        $('#file-info').remove();
+    }
+    
+    var form = document.getElementById(form_id);
     
     $('#' + wrapper_id).append("<div id=\"progressbar\"></div>");
     
@@ -23,8 +40,6 @@ function upload(form_id, wrapper_id, user_id)
         'value' : 0
     });
     
-    var form = document.getElementById(form_id);
-    
     var xhr = new XMLHttpRequest();
     
     xhr.upload.addEventListener("progress", updateProgress, false);
@@ -37,42 +52,68 @@ function upload(form_id, wrapper_id, user_id)
         {
             if(xhr.status == 200)
             {
-                $('#up-speed').fadeOut('fast');
-                $('#' + wrapper_id).append("<div id = \"file-info\">");
-                $('#file-info').append("<div id = \"close-but\"></div>");
-                $('#file-info').append("Pomyślnie załadowano plik:<br />" + form.elements['file'].files[0].name + "<br />");
-                $('#file-info').append("Rozmiar: " + form.elements['file'].files[0].size + "b<br />");
-                $('#file-info').append("Typ: " + form.elements['file'].files[0].type + "<br />");
-                $('#' + wrapper_id).append("</div>");
-                $('#file-info').hide();
-                $('#close-but').click(function(){
-                    $('#file-info').fadeOut('slow', function(){
+                if(form.elements['file'].files.length != 0)
+                {
+                    $('#up-speed').fadeOut('fast');
+                    $('#' + wrapper_id).append("<div id = \"file-info\">");
+                    $('#file-info').append("<div id = \"close-but\"></div>");
+                    $('#file-info').append("Pomyślnie załadowano plik:<br />" + form.elements['file'].files[0].name + "<br />");
+                    $('#file-info').append("Rozmiar: " + form.elements['file'].files[0].size + "b<br />");
+                    $('#file-info').append("Typ: " + form.elements['file'].files[0].type + "<br />");
+                    $('#' + wrapper_id).append("</div>");
+                    $('#file-info').hide();
+                    $('#close-but').click(function(){
+                        $('#file-info').fadeOut('slow', function(){
+                            $('#file-info').remove();
+                        });
+                        $('#progressbar').fadeOut('slow', function(){
+                            $('#progressbar').remove();
+                        });
+                        $('#prog-status').fadeOut('slow', function(){
+                            $('#prog-status').remove();
+                            $('body').html(xhr.responseText);
+                        });
+                    });
+                    $('#close-but').mouseenter(function(){
+                        $(this).css({'box-shadow' : '0 0 5px #ffffff'});
+                    });
+                    $('#close-but').mouseleave(function(){
+                        $(this).css({'box-shadow' : 'none'});
+                    });
+                    $('#file-info').fadeIn('slow');
+                    //$('body').html(xhr.responseText);
+                }
+                else
+                {
+                    $('#prog-status').remove();
+                    $('#progressbar').remove();
+                    
+                    if($('#file-info').length > 0)
+                    {
                         $('#file-info').remove();
+                    }
+                    
+                    $('#' + wrapper_id).append("<div id = \"file-info\">");
+                    $('#file-info').append("<div id = \"close-but\"></div>");
+                    $('#file-info').append("<span style=\"color:red\"><strong>Nie wybrano żadnego pliku!</strong></span><br /><br />Wybierz chociaż jeden plik");
+                    $('#' + wrapper_id).append("</div>");
+        
+                    $('#close-but').click(function(){
+                        $('#file-info').fadeOut('slow', function(){
+                            $('#file-info').remove();
+                            location.href = "upload_" + user_id + ".html";
+                        });
                     });
-                    $('#progressbar').fadeOut('slow', function(){
-                        $('#progressbar').remove();
-                    });
-                    $('#prog-status').fadeOut('slow', function(){
-                        $('#prog-status').remove();
-                        $('body').html(xhr.responseText);
-                    });
-                });
-                $('#close-but').mouseenter(function(){
-                    $(this).css({'box-shadow' : '0 0 5px #ffffff'});
-                });
-                $('#close-but').mouseleave(function(){
-                    $(this).css({'box-shadow' : 'none'});
-                });
-                $('#file-info').fadeIn('slow');
-                //$('body').html(xhr.responseText);
+                }
             }
         }
         
     };
-   
+    
     xhr.send(new FormData(form));
     
     setInterval(uploadSpeed, 1000);
+
 }
 
 function  updateProgress(e)
@@ -80,7 +121,7 @@ function  updateProgress(e)
     if (e.lengthComputable)
     {
         var complete = (e.loaded / e.total) * 100;
-        //var ms_now = new Date().getTime();
+
         $('#progressbar').progressbar({'value' : complete});
         $('#percent').text(Math.round(complete) + " % przesłane");
         current_uploaded = e.loaded;
