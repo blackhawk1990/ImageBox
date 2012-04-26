@@ -27,6 +27,7 @@ html, body
 {
     margin: 1em auto;
     text-align: left;
+    color: #000000;
 }
 
 .news-content p strong
