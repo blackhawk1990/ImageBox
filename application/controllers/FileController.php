@@ -30,6 +30,7 @@ class FileController extends Zend_Controller_Action
         ");
       
         $upload_form = new App_Form_Upload();
+        $upload_form->cancel->setAttrib('onclick', "location.href='".$this->view->url(array('id' => $request->getParam('id')), 'collection')."'");
         
         if($request->isPost())
         {
@@ -41,7 +42,27 @@ class FileController extends Zend_Controller_Action
                     mkdir("files/".$request->getParam('id'));
                 }
                 
-                move_uploaded_file($_FILES['file']['tmp_name'], "files/".$request->getParam('id')."/".$_FILES['file']['name']);
+                $file_path = "files/".$request->getParam('id')."/".$_FILES['file']['name'];
+                
+                move_uploaded_file($_FILES['file']['tmp_name'], $file_path);
+                unlink($_FILES ['file'] ['tmp_name']);
+                
+                //zapis do bazy danych
+                $file_table = new App_Model_File();
+                $file = pathinfo($file_path);
+                
+                $file_data = array(
+                    'userID' => $request->getParam('id'),
+                    'url' => $file_path,
+                    'data_dodania' => new Zend_Db_Expr('CURDATE()'),
+                    'format' => $file['extension'],
+                    'ilosc_pobran' => 0,
+                    'nazwa' => strlen(str_replace('.' . $file['extension'], '', $_FILES['file']['name'])) > 20 ? substr(str_replace('.' . $file['extension'], '', $_FILES['file']['name']), 0, 20) . "..." : substr(str_replace('.' . $file['extension'], '', $_FILES['file']['name']), 0, 20), //nazwa nie dluzsza niz 20 znakow
+                    'ocena' => 0,
+                    'waga' => round((filesize($file_path) / 1024) / 1024, 2)
+                );
+                
+                $file_table->insert($file_data);
                 
                 $this->_helper->redirector->goToRoute(array('id' => $request->getParam('id')), 'collection');
             }
@@ -61,6 +82,11 @@ class FileController extends Zend_Controller_Action
             if($request->getParam('id') != '')
             {
                 $this->view->id = $request->getParam('id');
+                
+                //odczyt z bazy danych
+                $file_table = new App_Model_File();
+                $this->view->file_data = $file_table->fetchAll($file_table->select()->where('userID=' . $request->getParam('id')));
+                
                 $this->view->render('file/collection.phtml');
             }
             else
@@ -73,7 +99,25 @@ class FileController extends Zend_Controller_Action
             $this->view->render('file/collection_error.phtml');
         }
     }
-
+    
+    public function deleteAction()
+    {
+        $request = $this->getRequest();
+        
+        if($request->isGet())
+        {
+            if($request->getParam('id') != '')
+            {
+                //kasowanie z bazy danych
+                $file_table = new App_Model_File();
+                $this->view->file = $file_table->fetchRow('fileID=' . $request->getParam('id'));
+                //kasowanie pliku
+                unlink($this->view->file['url']);
+                
+                $file_table->delete('fileID=' . $request->getParam('id'));
+            }
+        }
+    }
 
 }
 

@@ -15,8 +15,11 @@
     margin-top: 3px;
     height: 15px;
     width: 90px;
-    background: #000;
-    color: #fff;
+    border: none;
+    padding: 3px;
+    background: url('img/finput.png');
+    background-size: 100% 100%;
+    color: #000;
 }
 
 #logform .logowanie:hover
@@ -34,6 +37,26 @@
     padding-top: 2px;
 }
 
+#logform #login-label,
+#logform #password-label
+{
+    margin-top: 23px;
+}
+
+#logform .login
+{
+    width: 45px;
+    height: 20px;
+    border: none;
+    background: url('img/login.png');
+    background-size: 100% 100%;
+}
+
+#logform .login:hover
+{
+    background: url('img/login-hover.png');
+}
+
 #logform dd,
 #logform dt
 {
@@ -48,7 +71,7 @@
 
 #logform dt
 {
-    padding-top: 2px;
+    padding: 3px 2px 0 0;
 }
 
 #edit-form #cancel-element,

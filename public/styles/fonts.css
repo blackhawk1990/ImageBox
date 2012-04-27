@@ -97,3 +97,15 @@ font-style:normal;
 text-decoration:none;
 color:#ff9900;
 }
+
+#dandd
+{
+    color: #ffffff;
+}
+
+#logform #login-label,
+#logform #password-label
+{
+    font-family: "VTC", Arial;
+    font-size: 15px;
+}

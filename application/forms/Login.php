@@ -10,16 +10,16 @@ class App_Form_Login extends Zend_Form
             'filters' => array(
                 'StringTrim'
             ),
-            'label' => 'Login:',
+            'label' => 'Login',
             'class' => 'logowanie'
         ));
         $this->addElement('password', 'password', array(
-            'label' => 'Hasło:',
+            'label' => 'Hasło',
             'class' => 'logowanie',
         ));
         $this->addElement('submit', 'submit', array(
             'ignore' => true,
-            'label' => 'Zaloguj',
+            'label' => '',
             'class' => 'login'
         ));
     }

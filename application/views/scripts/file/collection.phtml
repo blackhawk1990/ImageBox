@@ -1,5 +1,96 @@
+<style>
+    td
+    {
+        padding: 3px;
+    }
+    
+    tr
+    {
+        border: solid thin #c5dbec;
+    }
+</style>
+
+<!-- Load Feather code -->
+<script type="text/javascript" src="<?php echo $this->baseUrl('public/js/feather.js') ?>"></script>
+
+<!-- Instantiate Feather -->
+<script type="text/javascript">
+        var featherEditor = new Aviary.Feather({
+            apiKey: 'd9f1a41e0',
+            apiVersion: 2,
+            tools: 'all',
+            appendTo: '',
+            language: 'pl',
+            onSave: function(imageID, newURL) {
+                var img = document.getElementById(imageID);
+                img.src = newURL;
+            }
+        });
+
+        function launchEditor(id, src) {
+            featherEditor.launch({
+                image: id,
+                url: src
+            });
+            return false;
+        }
+</script>
+
 <br /><br />
 <div id="view-content">
-	<p>View script for controller <b>File</b> and script/action name <b>collection</b></p>
+<!--	<p>View script for controller <b>File</b> and script/action name <b>collection</b></p>-->
         <p>ID: <?php echo $this->id ?></p>
+        
+        <div id="injection_site"></div>
+        
+        <p>
+        <?php
+        
+        echo "<table>";
+        
+        $i = 0;
+        
+        foreach($this->file_data as $file)
+        {
+            echo "<tr><td><a href=\"" . $this->baseUrl("/public/" . $file['url']) . "\" target=\"_blank\">" . $file['nazwa'] . "</a></td><td>Format: " . $file['format'] . "</td><td>Wielkość: " . $file['waga'] . " MB</td>";
+            
+            if($file['format'] == "jpg" || $file['format'] == "png")
+            {
+                $image_size = getimagesize($file['url']);
+                
+                echo "<td>Rozmiar: " . $image_size[0] . "x" . $image_size[1] . "</td>";
+                echo "<td><img id=\"thumb_" . $i . "\" src=\"" . $this->baseUrl("/public/" . $file['url']) . "\" width=100 height=80 /></td>";
+            }
+            else
+            {
+                echo "<td></td>";
+                echo "<td></td>";
+            }
+            
+            if(Zend_Auth::getInstance()->hasIdentity())
+            {
+                //dla zdjec - edycja
+                if($file['format'] == "jpg" || $file['format'] == "png")
+                {
+                    echo "<td><a class = \"admin-opt\" href = \"#\" onclick=\"return launchEditor('thumb_" . $i . "', '" . $this->baseUrl("/public/" . $file['url']) . "');\"><img src = \"" . $this->baseUrl("/public/styles/img/edit.png") . "\" alt = \"Edytuj\" /></a></td>";
+                }
+                else
+                {
+                    echo "<td></td>";
+                }
+                echo "<td><a class = \"admin-opt\" href = \"" . $this->url(array('id' => $file['fileID']), 'file_delete') . "\"><img src = \"" . $this->baseUrl("/public/styles/img/delete.png") . "\" alt = \"Usuń\" /></a></td>";
+                echo "</tr>";
+            }
+            else
+            {
+                echo "</tr>";
+            }
+            
+            $i++;
+        }
+        
+        echo "</table>";
+        
+        ?>
+        </p>
 </div>
