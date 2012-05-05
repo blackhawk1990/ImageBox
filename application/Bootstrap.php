@@ -41,8 +41,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         
         $acl->allow('admin'); //dostep do wszystkiego
         $acl->allow('user', 'upload-limited');
-        $acl->allow('user', 'upload-non-limited');
         $acl->allow('user', 'news-read');
+        $acl->allow('premium-user', 'upload-non-limited');
+        $acl->allow('premium-user', 'news-read');
         $acl->allow('not-logged', 'news-read');
         
         Zend_Registry::set('acl', $acl);

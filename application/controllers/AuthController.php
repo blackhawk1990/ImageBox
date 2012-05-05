@@ -19,6 +19,8 @@ class AuthController extends Zend_Controller_Action
         }
         
         $form = new App_Form_Login();
+        $form->setAttrib('action', $this->view->url(array(), 'login'));
+        
         $request = $this->getRequest()->getPost();
         
         if($request)
@@ -101,6 +103,7 @@ class AuthController extends Zend_Controller_Action
         $this->_auth->clearIdentity();
         $this->_helper->redirector('index');
         unset($this->storage->role);
+        unset($this->storage->id);
     }
 }
 

@@ -5,7 +5,13 @@ class FileController extends Zend_Controller_Action
 
     public function init()
     {
-        /* Initialize action controller here */
+        //pokazanie formularza logowania, gdy uzytkownik nie zalogowany
+        if(!Zend_Auth::getInstance()->hasIdentity())
+        {
+            $log_form = new App_Form_Login();
+            $log_form->setAttrib('action', $this->view->url(array(), 'login'));
+            $this->view->form = $log_form;
+        }
     }
 
     public function indexAction()
@@ -42,6 +48,7 @@ class FileController extends Zend_Controller_Action
                     mkdir("files/".$request->getParam('id'));
                 }
                 
+                //sciezka pliku
                 $file_path = "files/".$request->getParam('id')."/".$_FILES['file']['name'];
                 
                 move_uploaded_file($_FILES['file']['tmp_name'], $file_path);
@@ -71,11 +78,16 @@ class FileController extends Zend_Controller_Action
         {
             $this->view->upload_form = $upload_form;
         }
+        
     }
 
     public function collectionAction()
-    {   
+    {
         $request = $this->getRequest();
+        
+        //dolaczenie skryptow
+        $this->view->headScript()->appendFile($this->_request->getBaseUrl().'/public/js/feather.js');
+        $this->view->headScript()->appendFile($this->_request->getBaseUrl().'/public/js/jquery.counter.js');
         
         if($request->isGet())
         {
@@ -85,7 +97,12 @@ class FileController extends Zend_Controller_Action
                 
                 //odczyt z bazy danych
                 $file_table = new App_Model_File();
-                $this->view->file_data = $file_table->fetchAll($file_table->select()->where('userID=' . $request->getParam('id')));
+                $this->view->file_data = $file_table->fetchAll($file_table->select()->where('userID=?', $request->getParam('id'))->order('data_dodania DESC'));
+                
+                //pobranie danych o userze (jego roli i id) z sesji
+                $storage = new Zend_Session_Namespace('user_data');
+                $this->view->user_role = $storage->role;
+                $this->view->user_id = $storage->id;
                 
                 $this->view->render('file/collection.phtml');
             }
@@ -98,8 +115,9 @@ class FileController extends Zend_Controller_Action
         {
             $this->view->render('file/collection_error.phtml');
         }
+
     }
-    
+
     public function deleteAction()
     {
         $request = $this->getRequest();
@@ -116,12 +134,89 @@ class FileController extends Zend_Controller_Action
                 
                 $file_table->delete('fileID=' . $request->getParam('id'));
             }
+        
         }
     }
 
+    public function showAction()
+    {
+        //tablica zamieniajaca rozszerzenie na typ mime dla przegladarki
+        $mimes = array(
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'png' => 'image/png',
+            'gif' => 'image/gif',
+            'txt' => 'text/plain',
+            'doc' => 'application/msword',
+            'pdf' => 'application/pdf',
+            'mp3' => 'audio/mp3',
+            'ogg' => 'audio/ogg',
+            'aac' => 'audio/aac',
+            'wmv' => 'video/x-ms-wmv'
+        );
+        
+        //zablokowanie wyswietlania domyslnego widoku i layoutu
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender();
+        
+        $request = $this->getRequest();
+        
+        if($request->isGet())
+        {
+            if($request->getParam('id') != '')
+            {
+                //pobranie z bazy informacji o polozeniu pliku
+                $file_table = new App_Model_File();
+                $file_data = $file_table->fetchRow($file_table->select('url,format')->where('fileID=?', $request->getParam('id')));
+                //wyciagniecie danych z pliku
+                $file = file_get_contents($file_data['url']);
+                
+                //wyslanie pliku do przegladarki
+                $this->getResponse()
+                     ->setHeader('Content-Type', $mimes[$file_data['format']])
+                     ->appendBody($file);
+            }
+        }
+    }
+
+    public function downloadAction()
+    {
+        //zablokowanie wyswietlania domyslnego widoku i layoutu
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender();
+        
+        $request = $this->getRequest();
+        
+        if($request->isGet())
+        {
+            if($request->getParam('id') != '')
+            {
+                //pobranie z bazy informacji o polozeniu pliku
+                $file_table = new App_Model_File();
+                $file_data = $file_table->fetchRow($file_table->select('url,format,ilosc_pobran,userID')->where('fileID=?', $request->getParam('id')));
+                //wyciagniecie danych z pliku
+                $file = file_get_contents($file_data['url']);
+                //pobranie dotychczasowej liczby pobran pliku
+                $file_downloads = $file_data['ilosc_pobran'];
+                $file_downloads++;
+                
+                //wyslanie pliku do przegladarki
+                $this->getResponse()
+                     ->setHeader('Content-Type', $mimes[$file_data['format']]);
+                
+                $this->getResponse()
+                     ->setHeader('Content-Disposition', 'attachment; filename="file_' . $request->getParam('id') . '.' . $file_data['format'])
+                     ->appendBody($file);
+                
+                //zwiekszenie licznika pobran
+                $file_table->update(array('ilosc_pobran' => $file_downloads), 'fileID=' . $request->getParam('id'));
+            }
+        }
+        
+    }
+
+
 }
-
-
 
 
 

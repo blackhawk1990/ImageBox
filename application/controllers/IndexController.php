@@ -20,7 +20,7 @@ class IndexController extends Zend_Controller_Action
         }
         else //jesli nie przekierowujemy go do ekranu logowania
         {
-            $this->_helper->redirector('index', 'auth');
+            $this->_helper->redirector->goToRoute(array(), 'login');
         }
     }
 
