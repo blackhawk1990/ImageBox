@@ -24,10 +24,9 @@
             }
         });
 
-        function launchEditor(id, src) {
+        function launchEditor(id) {
             featherEditor.launch({
-                image: id,
-                url: src
+                image: id
             });
             return false;
         }
@@ -113,13 +112,14 @@
                     //dla zdjec - edycja
                     if(($file['format'] == "jpg" || $file['format'] == "png") && $this->user_role == 'premium-user')
                     {
-                        echo "<td><a class = \"admin-opt\" href = \"#\" onclick=\"return launchEditor('thumb_" . $i . "', '" . $this->baseUrl($file['url']) . "');\"><img src = \"" . $this->baseUrl("/public/styles/img/edit.png") . "\" alt = \"Edytuj\" /></a></td>";
+                        echo "<td><a class = \"admin-opt\" href = \"#\" onclick=\"return launchEditor('img_" . $i . "');\"><img src = \"" . $this->baseUrl("/public/styles/img/edit.png") . "\" alt = \"Edytuj\" /></a></td>";
                     }
                     else
                     {
                         echo "<td></td>";
                     }
                     echo "<td><a class = \"admin-opt\" href = \"" . $this->url(array('id' => $file['fileID']), 'file_delete') . "\"><img src = \"" . $this->baseUrl("/public/styles/img/delete.png") . "\" alt = \"Usuń\" /></a></td>";
+                    echo "<td><img class=\"hidden\" id=\"img_" . $i . "\" src=\"" . $this->baseUrl('public/' . $file['url']) . "\" /></td>";
                     echo "</tr>";
                 }
                 else

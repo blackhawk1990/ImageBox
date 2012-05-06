@@ -55,6 +55,7 @@
 #logform .login:hover
 {
     background: url('img/login-hover.png');
+    background-size: 100% 100%;
 }
 
 #logform dd,

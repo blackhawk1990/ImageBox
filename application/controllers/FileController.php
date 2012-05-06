@@ -12,6 +12,21 @@ class FileController extends Zend_Controller_Action
             $log_form->setAttrib('action', $this->view->url(array(), 'login'));
             $this->view->form = $log_form;
         }
+        
+        //tablica zamieniajaca rozszerzenie na typ mime dla przegladarki
+        $mimes = array(
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'png' => 'image/png',
+            'gif' => 'image/gif',
+            'txt' => 'text/plain',
+            'doc' => 'application/msword',
+            'pdf' => 'application/pdf',
+            'mp3' => 'audio/mp3',
+            'ogg' => 'audio/ogg',
+            'aac' => 'audio/aac',
+            'wmv' => 'video/x-ms-wmv'
+        );
     }
 
     public function indexAction()
@@ -140,21 +155,6 @@ class FileController extends Zend_Controller_Action
 
     public function showAction()
     {
-        //tablica zamieniajaca rozszerzenie na typ mime dla przegladarki
-        $mimes = array(
-            'jpg' => 'image/jpeg',
-            'jpeg' => 'image/jpeg',
-            'png' => 'image/png',
-            'gif' => 'image/gif',
-            'txt' => 'text/plain',
-            'doc' => 'application/msword',
-            'pdf' => 'application/pdf',
-            'mp3' => 'audio/mp3',
-            'ogg' => 'audio/ogg',
-            'aac' => 'audio/aac',
-            'wmv' => 'video/x-ms-wmv'
-        );
-        
         //zablokowanie wyswietlania domyslnego widoku i layoutu
         $this->_helper->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender();
@@ -202,10 +202,10 @@ class FileController extends Zend_Controller_Action
                 
                 //wyslanie pliku do przegladarki
                 $this->getResponse()
-                     ->setHeader('Content-Type', $mimes[$file_data['format']]);
+                     ->setHeader('Content-Type', 'application/x-download');
                 
                 $this->getResponse()
-                     ->setHeader('Content-Disposition', 'attachment; filename="file_' . $request->getParam('id') . '.' . $file_data['format'])
+                     ->setHeader('Content-Disposition', 'attachment; filename="file_' . $request->getParam('id') . '.' . $file_data['format'] . '"')
                      ->appendBody($file);
                 
                 //zwiekszenie licznika pobran
