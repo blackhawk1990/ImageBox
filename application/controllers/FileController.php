@@ -157,9 +157,17 @@ class FileController extends Zend_Controller_Action
 
     public function showAction()
     {
-        //zablokowanie wyswietlania domyslnego widoku i layoutu
-        $this->_helper->layout()->disableLayout();
+        //zablokowanie wyswietlania domyslnego widoku
         $this->_helper->viewRenderer->setNoRender();
+        
+        //widok
+        $view = new Zend_View();
+        
+        //dolaczenie skryptow
+        $view->headScript()->appendFile($this->_request->getBaseUrl().'/public/js/feather.js');
+        $view->headScript()->appendFile($this->_request->getBaseUrl().'/public/js/jquery.counter.js');
+        //dolaczenie styli
+        $view->headLink()->appendStylesheet($this->_request->getBaseUrl().'/public/styles/collection.css');
         
         $request = $this->getRequest();
         
@@ -169,14 +177,52 @@ class FileController extends Zend_Controller_Action
             {
                 //pobranie z bazy informacji o polozeniu pliku
                 $file_table = new App_Model_File();
-                $file_data = $file_table->fetchRow($file_table->select('url,format')->where('fileID=?', $request->getParam('id')));
+                $file_data = $file_table->fetchRow($file_table->select('url,format,userID')->where('fileID=?', $request->getParam('id')));
+                //rozmiar obrazu
+                $image_size = getimagesize($file_data['url']);
+
                 //wyciagniecie danych z pliku
-                $file = file_get_contents($file_data['url']);
+                //$file = file_get_contents($file_data['url']);
                 
                 //wyslanie pliku do przegladarki
-                $this->getResponse()
-                     ->setHeader('Content-Type', $mimes[$file_data['format']])
-                     ->appendBody($file);
+//                $this->getResponse()
+//                     ->setHeader('Content-Type', $mimes[$file_data['format']])
+//                     ->appendBody($file);
+                
+                $view->headScript()->appendScript("
+                            $(function()
+                            {
+                                $('body').append('<div id=\'message-box\' title=\'Podgląd\'><img src=\'public/" . $file_data['url'] . "\' width=" . ($image_size[0]/2) . " height=" . ($image_size[1]/2) . " /></div>');
+
+                                //messagebox z info - po kliknięciu zamyka się i przenosi na stronę główną
+                                $('#message-box').dialog({
+                                    modal : true,
+                                    resizable : false,
+                                    autoOpen : true,
+                                    show : 'slide',
+                                    hide : 'fade',
+                                    width : " . ($image_size[0]/2 + 45) . ",
+                                    height : " . ($image_size[1]/2 + 50) . "
+                                });
+                            });
+                        ");
+                
+                $view->id = $file_data['userID'];
+
+                //odczyt z bazy danych
+                $view->file_data = $file_table->fetchAll($file_table->select()->where('userID=?', $file_data['userID'])->order('data_dodania DESC'));
+
+                //pobranie danych o userze (jego roli i id) z sesji
+                $storage = new Zend_Session_Namespace('user_data');
+                $view->user_role = $storage->role;
+                $view->user_id = $storage->id;
+                
+                //dodanie sciezki i wyrenderowanie widoku kolekcji
+                $view->addScriptPath(APPLICATION_PATH . "/views/scripts/");
+
+                $rendered = $view->render('file/collection.phtml');
+                echo $rendered;
+                
             }
         }
     }

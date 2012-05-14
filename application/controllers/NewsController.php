@@ -15,7 +15,7 @@ class NewsController extends Zend_Controller_Action
     public function addAction()
     {
         $form = new App_Form_Add();
-        $form->cancel->setAttrib('onclick', "location.href = '".$this->_request->getBaseUrl()."';");
+        $form->cancel->setAttrib('onclick', "location.href = '".$this->view->url(array(), 'mainpage')."';");
         
         $request = $this->getRequest();
         
@@ -48,7 +48,7 @@ class NewsController extends Zend_Controller_Action
                 
                 $news->insert($data);
 
-                echo "News \"" . $request->getPost('tytul') . "\" został dodany! <input class = \"button submit-but\" type = \"button\" onclick = \"location.href = '" . $this->_request->getBaseUrl() . "';\" value = \"\" />";
+                echo "News \"" . $request->getPost('tytul') . "\" został dodany! <input class = \"button submit-but\" type = \"button\" onclick = \"location.href = '" . $this->view->url(array(), 'mainpage') . "';\" value = \"\" />";
                 
             }
             else
@@ -86,18 +86,18 @@ class NewsController extends Zend_Controller_Action
         if($this->getRequest()->getParam('conf')) //potwierdzenie skasowania
         {    
             $news->delete('id='.$this->getRequest()->getParam('id'));
-            echo "News \"".$data['tytul']."\" o id: ".$this->getRequest()->getParam('id')." został usunięty! <input class = \"button submit-but\" type = \"button\" onclick = \"location.href = '".$this->_request->getBaseUrl()."';\" value = \"\" />";
+            echo "News \"".$data['tytul']."\" o id: ".$this->getRequest()->getParam('id')." został usunięty! <input class = \"button submit-but\" type = \"button\" onclick = \"location.href = '".$this->view->url(array(), 'mainpage')."';\" value = \"\" />";
         }
         else
         {
-            echo "Czy chcesz usunąć news \"".$data['tytul']."\" z bazy danych? <input type = \"button\" class = \"button save-but\" onclick = \"location.href = '".$this->_request->getBaseUrl()."/news/delete/id/".$this->getRequest()->getParam('id')."/conf/1';\" /> <input type = \"button\" class = \"button cancel-but\" onclick = \"location.href = '".$this->_request->getBaseUrl()."';\" />";
+            echo "Czy chcesz usunąć news \"".$data['tytul']."\" z bazy danych? <input type = \"button\" class = \"button save-but\" onclick = \"location.href = '".$this->_request->getBaseUrl()."/news/delete/id/".$this->getRequest()->getParam('id')."/conf/1';\" /> <input type = \"button\" class = \"button cancel-but\" onclick = \"location.href = '".$this->view->url(array(), 'mainpage')."';\" />";
         }
     }
     
     public function editAction()
     {
         $form = new App_Form_Edit();
-        $form->cancel->setAttrib('onclick', "location.href = '".$this->_request->getBaseUrl()."';");
+        $form->cancel->setAttrib('onclick', "location.href = '".$this->view->url(array(), 'mainpage')."';");
         
         $request = $this->getRequest();
         
@@ -127,7 +127,7 @@ class NewsController extends Zend_Controller_Action
                     'tekst' => $request->getPost('tresc'),
                     'autor' => $request->getPost('autor'),
                     'tytul' => $request->getPost('tytul')), 'id='.$request->getParam('id'));
-                echo "Zapisano zmienione dane newsa \"".$request->getPost('tytul')."\" ! <input class = \"button submit-but\" type = \"button\" onclick = \"location.href = '".$this->_request->getBaseUrl()."';\" value = \"\" />";
+                echo "Zapisano zmienione dane newsa \"".$request->getPost('tytul')."\" ! <input class = \"button submit-but\" type = \"button\" onclick = \"location.href = '".$this->view->url(array(), 'mainpage')."';\" value = \"\" />";
                 $this->view->form = '';
             }
             else if(($request->getPost('tresc') != $data['tekst']) && ($request->getPost('autor') != $data['autor']))
@@ -135,7 +135,7 @@ class NewsController extends Zend_Controller_Action
                 $news->update(array(
                     'tekst' => $request->getPost('tresc'),
                     'autor' => $request->getPost('autor')), 'id='.$request->getParam('id'));
-                echo "Zapisano zmienione dane newsa \"".$data['tytul']."\" ! <input class = \"button submit-but\" type = \"button\" onclick = \"location.href = '".$this->_request->getBaseUrl()."';\" value = \"\" />";
+                echo "Zapisano zmienione dane newsa \"".$data['tytul']."\" ! <input class = \"button submit-but\" type = \"button\" onclick = \"location.href = '".$this->view->url(array(), 'mainpage')."';\" value = \"\" />";
                 $this->view->form = '';
             }
             else if(($request->getPost('tresc') != $data['tekst']) && ($request->getPost('tytul') != $data['tytul']))
@@ -143,7 +143,7 @@ class NewsController extends Zend_Controller_Action
                 $news->update(array(
                     'tekst' => $request->getPost('tresc'),
                     'tytul' => $request->getPost('tytul')), 'id='.$request->getParam('id'));
-                echo "Zapisano zmienione dane newsa \"".$request->getPost('tytul')."\" ! <input class = \"button submit-but\" type = \"button\" onclick = \"location.href = '".$this->_request->getBaseUrl()."';\" value = \"\" />";
+                echo "Zapisano zmienione dane newsa \"".$request->getPost('tytul')."\" ! <input class = \"button submit-but\" type = \"button\" onclick = \"location.href = '".$this->view->url(array(), 'mainpage')."';\" value = \"\" />";
                 $this->view->form = '';
             }
             else if(($request->getPost('autor') != $data['autor']) && ($request->getPost('tytul') != $data['tytul']))
@@ -151,25 +151,25 @@ class NewsController extends Zend_Controller_Action
                 $news->update(array(
                     'autor' => $request->getPost('autor'),
                     'tytul' => $request->getPost('tytul')), 'id='.$request->getParam('id'));
-                echo "Zapisano zmienione dane newsa \"".$request->getPost('tytul')."\" ! <input class = \"button submit-but\" type = \"button\" onclick = \"location.href = '".$this->_request->getBaseUrl()."';\" value = \"\" />";
+                echo "Zapisano zmienione dane newsa \"".$request->getPost('tytul')."\" ! <input class = \"button submit-but\" type = \"button\" onclick = \"location.href = '".$this->view->url(array(), 'mainpage')."';\" value = \"\" />";
                 $this->view->form = '';
             }
             else if($request->getPost('tresc') != $data['tekst'])
             {
                 $news->update(array('tekst' => $request->getPost('tresc')), 'id='.$request->getParam('id'));
-                echo "Zapisano zmienione dane newsa \"".$data['tytul']."\" ! <input class = \"button submit-but\" type = \"button\" onclick = \"location.href = '".$this->_request->getBaseUrl()."';\" value = \"\" />";
+                echo "Zapisano zmienione dane newsa \"".$data['tytul']."\" ! <input class = \"button submit-but\" type = \"button\" onclick = \"location.href = '".$this->view->url(array(), 'mainpage')."';\" value = \"\" />";
                 $this->view->form = '';
             }
             else if($request->getPost('autor') != $data['autor'])
             {
                 $news->update(array('autor' => $request->getPost('autor')), 'id='.$request->getParam('id'));
-                echo "Zapisano zmienione dane newsa \"".$data['tytul']."\" ! <input class = \"button submit-but\" type = \"button\" onclick = \"location.href = '".$this->_request->getBaseUrl()."';\" value = \"\" />";
+                echo "Zapisano zmienione dane newsa \"".$data['tytul']."\" ! <input class = \"button submit-but\" type = \"button\" onclick = \"location.href = '".$this->view->url(array(), 'mainpage')."';\" value = \"\" />";
                 $this->view->form = '';
             }
             else if($request->getPost('tytul') != $data['tytul'])
             {
                 $news->update(array('tytul' => $request->getPost('tytul')), 'id='.$request->getParam('id'));
-                echo "Zapisano zmienione dane newsa \"".$request->getPost('tytul')."\" ! <input class = \"button submit-but\" type = \"button\" onclick = \"location.href = '".$this->_request->getBaseUrl()."';\" value = \"\" />";
+                echo "Zapisano zmienione dane newsa \"".$request->getPost('tytul')."\" ! <input class = \"button submit-but\" type = \"button\" onclick = \"location.href = '".$this->view->url(array(), 'mainpage')."';\" value = \"\" />";
                 $this->view->form = '';
             }
             else

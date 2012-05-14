@@ -88,12 +88,12 @@
 
                 echo "<tr><td><a href=\"" . $this->url(array('id' => $file['fileID']), 'file_download') . "\" onclick=\"update(" . $object_num . ");\" title=\"Kliknij, aby pobrać plik\">" . $file['nazwa'] . "</a></td><td>Format: " . $file['format'] . "</td><td>Wielkość: " . $file['waga'] . " MB</td>";
 
-                if($file['format'] == "jpg" || $file['format'] == "png")
+                if($file['format'] == "jpg" || $file['format'] == "JPG" || $file['format'] == "jpeg" || $file['format'] == "png")
                 {
                     $image_size = getimagesize($file['url']);
 
                     echo "<td>Rozmiar: " . $image_size[0] . "x" . $image_size[1] . "</td>";
-                    echo "<td><a href=\"" . $this->url(array('id' => $file['fileID'], 'ext' => $file['format']), 'file_show') . "\" target=\"_blank\"><img id=\"thumb_" . $i . "\" src=\"" . $this->baseUrl('public/' . $file['url']) . "\" width=100 height=80 /></a></td>";
+                    echo "<td><a href=\"" . $this->url(array('id' => $file['fileID'], 'ext' => $file['format']), 'file_show') . "\"><img id=\"thumb_" . $i . "\" src=\"" . $this->baseUrl('public/' . $file['url']) . "\" width=100 height=80 /></a></td>";
                 }
                 else
                 {
@@ -144,7 +144,7 @@
         <tr>
             <?php
             //pobieranie w formie archiwum całego albumu
-            echo "<td><a class = \"admin-opt\" href=\"" . $this->url(array('id' => $this->id, 'download' => 0), 'compress_all') . "\"><img src=\"" . $this->baseUrl('public/styles/img/compress.png') . "\"</a></td>";
+            echo "<td><a class = \"admin-opt\" href=\"" . $this->url(array('id' => $this->id, 'download' => 0), 'compress_all') . "\" title=\"Kompresuj pliki\"><img src=\"" . $this->baseUrl('public/styles/img/compress.png') . "\"</a></td>";
             ?>
         </tr>
     </table>
