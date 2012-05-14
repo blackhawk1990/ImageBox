@@ -103,6 +103,8 @@ class FileController extends Zend_Controller_Action
         //dolaczenie skryptow
         $this->view->headScript()->appendFile($this->_request->getBaseUrl().'/public/js/feather.js');
         $this->view->headScript()->appendFile($this->_request->getBaseUrl().'/public/js/jquery.counter.js');
+        //dolaczenie styli
+        $this->view->headLink()->appendStylesheet($this->_request->getBaseUrl().'/public/styles/collection.css');
         
         if($request->isGet())
         {
@@ -210,6 +212,151 @@ class FileController extends Zend_Controller_Action
                 
                 //zwiekszenie licznika pobran
                 $file_table->update(array('ilosc_pobran' => $file_downloads), 'fileID=' . $request->getParam('id'));
+            }
+        }
+        
+    }
+    
+    public function zipAction()
+    {
+        $this->_helper->viewRenderer->setNoRender();
+        
+        $view = new Zend_View();
+        
+        $request = $this->getRequest();
+        
+        //dolaczenie skryptow
+        $view->headScript()->appendFile($this->_request->getBaseUrl().'/public/js/feather.js');
+        $view->headScript()->appendFile($this->_request->getBaseUrl().'/public/js/jquery.counter.js');
+        //dolaczenie styli
+        $view->headLink()->appendStylesheet($this->_request->getBaseUrl().'/public/styles/collection.css');
+        
+        //jezeli przeslano dane getem
+        if($request->isGet())
+        {
+            if($request->getParam('id') != '')
+            {
+                //sciezka plikow
+                $file_path = "files/".$request->getParam('id');
+                
+                //nazwa archiwum
+                $arc_name = "user_" . $request->getParam('id') . ".zip";
+                
+                //tymczasowa sciezka do archiwum
+                $arc_path = $file_path . "/tmp/" . $arc_name;
+                
+                //tworzenie archiwum
+                if(!$request->getParam('download'))
+                {
+                    //jezeli katalog tymczasowy nie istnieje, zostaje utworzony
+                    if(!file_exists($file_path . "/tmp"))
+                    {
+                        mkdir($file_path . "/tmp");
+                    }
+
+                    $ziparc = new ZipArchive();
+                    //utworzenie archiwum
+                    $res = $ziparc->open($arc_path, ZIPARCHIVE::CREATE);
+
+                    //archiwum zostalo utworzone
+                    if($res === TRUE)
+                    {
+                        $ziparc->addEmptyDir("user_" . $request->getParam('id') . "_collection");
+
+                        $tmp = dir($file_path);
+
+                        //odczyt wszystkich plikow z folderu z albumem
+                        while(($file_name = $tmp->read()) != NULL)
+                        {
+                            //wykluczenie niedozwolonych nazw plikow
+                            if($file_name != '.' && $file_name != '..' && $file_name != '' && $file_name != 'tmp')
+                            {
+                                $ziparc->addFile($file_path . "/" . $file_name, "user_" . $request->getParam('id') . "_collection/" . $file_name);
+                            }
+                        }
+
+                        $tmp->close();
+
+                        $ziparc->close();
+                        
+                        $view->id = $request->getParam('id');
+                
+                        //odczyt z bazy danych
+                        $file_table = new App_Model_File();
+                        $view->file_data = $file_table->fetchAll($file_table->select()->where('userID=?', $request->getParam('id'))->order('data_dodania DESC'));
+
+                        //pobranie danych o userze (jego roli i id) z sesji
+                        $storage = new Zend_Session_Namespace('user_data');
+                        $view->user_role = $storage->role;
+                        $view->user_id = $storage->id;
+
+                        $view->headScript()->appendScript("
+                            $(function()
+                            {
+                                $('body').append('<div id=\'message-box\' title=\'Sukces\'>Archiwum zostało wygenerowane!<br />Naciśnij OK, aby rozpocząć pobieranie</div>');
+
+                                //messagebox z info - po kliknięciu zamyka się i przenosi na stronę główną
+                                $('#message-box').dialog({
+                                    modal : true,
+                                    resizable : false,
+                                    autoOpen : true,
+                                    buttons : [{
+                                        text : 'OK',
+                                        click : function(){ $(this).dialog('close'); location.href='".$this->view->url(array('id' => $request->getParam('id'), 'download' => 1), 'compress_all')."' }
+                                    }]
+                                });
+                            });
+                        ");
+                        
+                        //dodanie sciezki i wyrenderowanie widoku kolekcji
+                        $view->addScriptPath(APPLICATION_PATH . "/views/scripts/");
+                        
+                        $rendered = $view->render('file/collection.phtml');
+                        echo $rendered;
+                    }
+                    else
+                    {
+                        $view->headScript()->appendScript("
+                            $(function()
+                            {
+                                $('body').append('<div id=\'message-box\' title=\'Błąd\'>Błąd tworzenia archiwum!</div>');
+
+                                //messagebox z info - po kliknięciu zamyka się i przenosi na stronę główną
+                                $('#message-box').dialog({
+                                    modal : true,
+                                    resizable : false,
+                                    autoOpen : true,
+                                    buttons : [{
+                                        text : 'OK',
+                                        click : function(){ $(this).dialog('close'); location.href='".$this->view->url(array('id' => $request->getParam('id')), 'collection')."' }
+                                    }]
+                                });
+                            });
+                        ");
+                    }
+                }
+                else //pobieranie archiwum
+                {
+                    //rozmiar pliku
+                    $fsize = filesize($arc_path);
+                    
+                    //wyciagniecie danych z pliku
+                    $file = file_get_contents($arc_path);
+
+                    //wyslanie pliku do przegladarki
+                    $this->getResponse()
+                        ->setHeader('Content-Type', 'application/x-download');
+                    
+                    $this->getResponse()
+                        ->setHeader('Content-Length', $fsize);
+
+                    $this->getResponse()
+                        ->setHeader('Content-Disposition', 'attachment; filename="' . $arc_name . '"')
+                        ->appendBody($file);
+
+                    //skasowanie pliku tymczasowego
+                    unlink($arc_path);
+                }
             }
         }
         

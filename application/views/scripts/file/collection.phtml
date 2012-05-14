@@ -16,7 +16,6 @@
             apiKey: 'd9f1a41e0',
             apiVersion: 2,
             tools: 'all',
-            appendTo: '',
             language: 'pl',
             onSave: function(imageID, newURL) {
                 var img = document.getElementById(imageID);
@@ -57,84 +56,96 @@
         <h2>Kolekcja</h2>
         
         <p>
-        <?php
-        
-        //init
-        $i = 0;
-        $object_num = 0;
-        
-        echo "<table>";
-        
-        //naglowek tablicy
-        echo "<tr><th colspan=5></th><th>Pobrań<th></th><th></th></tr>";
-        
-        //sprawdzenie liczby plikow
-        foreach($this->file_data as $file)
-        {
-            $i++;
-        }
-        
-        //utowrzenie tablicy w js do przechowywania liczby pobran i dynamicznego ich zwiekszania
-        echo "<script type=\"text/javascript\">
-                    var upload_num = new Array(" . $i . ");
-                </script>";
-        
-        $i = 0;
-        
-        foreach($this->file_data as $file)
-        {
+            <?php
+
+            //init
+            $i = 0;
+            $object_num = 0;
+
+            echo "<table>";
+
+            //naglowek tablicy
+            echo "<tr><th colspan=5></th><th>Pobrań<th></th><th></th></tr>";
+
+            //sprawdzenie liczby plikow
+            foreach($this->file_data as $file)
+            {
+                $i++;
+            }
+
+            //utowrzenie tablicy w js do przechowywania liczby pobran i dynamicznego ich zwiekszania
             echo "<script type=\"text/javascript\">
-                    upload_num[" . $object_num . "] = " . $file['ilosc_pobran'] . ";
-                </script>";
-            
-            echo "<tr><td><a href=\"" . $this->url(array('id' => $file['fileID']), 'file_download') . "\" onclick=\"update(" . $object_num . ");\" title=\"Kliknij, aby pobrać plik\">" . $file['nazwa'] . "</a></td><td>Format: " . $file['format'] . "</td><td>Wielkość: " . $file['waga'] . " MB</td>";
-            
-            if($file['format'] == "jpg" || $file['format'] == "png")
+                        var upload_num = new Array(" . $i . ");
+                    </script>";
+
+            $i = 0;
+
+            foreach($this->file_data as $file)
             {
-                $image_size = getimagesize($file['url']);
-                
-                echo "<td>Rozmiar: " . $image_size[0] . "x" . $image_size[1] . "</td>";
-                echo "<td><a href=\"" . $this->url(array('id' => $file['fileID'], 'ext' => $file['format']), 'file_show') . "\" target=\"_blank\"><img id=\"thumb_" . $i . "\" src=\"" . $this->baseUrl('public/' . $file['url']) . "\" width=100 height=80 /></a></td>";
-            }
-            else
-            {
-                echo "<td></td>";
-                echo "<td></td>";
-            }
-            
-            //licznik pobran
-            echo "<td><div class=\"counter\" name=\"" . $file['ilosc_pobran'] . "\"></div></td>";
-            
-            if(Zend_Auth::getInstance()->hasIdentity())
-            {
-                if(($this->id == $this->user_id) || ($this->user_role == 'admin')) //widoczne tylko dla wlasciciela lub admina
+                echo "<script type=\"text/javascript\">
+                        upload_num[" . $object_num . "] = " . $file['ilosc_pobran'] . ";
+                    </script>";
+
+                echo "<tr><td><a href=\"" . $this->url(array('id' => $file['fileID']), 'file_download') . "\" onclick=\"update(" . $object_num . ");\" title=\"Kliknij, aby pobrać plik\">" . $file['nazwa'] . "</a></td><td>Format: " . $file['format'] . "</td><td>Wielkość: " . $file['waga'] . " MB</td>";
+
+                if($file['format'] == "jpg" || $file['format'] == "png")
                 {
-                    //dla zdjec - edycja
-                    if(($file['format'] == "jpg" || $file['format'] == "png") && $this->user_role == 'premium-user')
-                    {
-                        echo "<td><a class = \"admin-opt\" href = \"#\" onclick=\"return launchEditor('img_" . $i . "');\"><img src = \"" . $this->baseUrl("/public/styles/img/edit.png") . "\" alt = \"Edytuj\" /></a></td>";
-                    }
-                    else
-                    {
-                        echo "<td></td>";
-                    }
-                    echo "<td><a class = \"admin-opt\" href = \"" . $this->url(array('id' => $file['fileID']), 'file_delete') . "\"><img src = \"" . $this->baseUrl("/public/styles/img/delete.png") . "\" alt = \"Usuń\" /></a></td>";
-                    echo "<td><img class=\"hidden\" id=\"img_" . $i . "\" src=\"" . $this->baseUrl('public/' . $file['url']) . "\" /></td>";
-                    echo "</tr>";
+                    $image_size = getimagesize($file['url']);
+
+                    echo "<td>Rozmiar: " . $image_size[0] . "x" . $image_size[1] . "</td>";
+                    echo "<td><a href=\"" . $this->url(array('id' => $file['fileID'], 'ext' => $file['format']), 'file_show') . "\" target=\"_blank\"><img id=\"thumb_" . $i . "\" src=\"" . $this->baseUrl('public/' . $file['url']) . "\" width=100 height=80 /></a></td>";
                 }
                 else
                 {
-                    echo "</tr>";
+                    echo "<td></td>";
+                    echo "<td></td>";
                 }
 
-                $i++;
+                //licznik pobran
+                echo "<td><div class=\"counter\" name=\"" . $file['ilosc_pobran'] . "\"></div></td>";
+
+                if(Zend_Auth::getInstance()->hasIdentity())
+                {
+                    if(($this->id == $this->user_id) || ($this->user_role == 'admin')) //widoczne tylko dla wlasciciela lub admina
+                    {
+                        //dla zdjec - edycja
+                        if(($file['format'] == "jpg" || $file['format'] == "png") && $this->user_role == 'premium-user')
+                        {
+                            echo "<td><a class = \"admin-opt\" href = \"#\" onclick=\"return launchEditor('img_" . $i . "');\"><img src = \"" . $this->baseUrl("/public/styles/img/edit.png") . "\" alt = \"Edytuj\" /></a></td>";
+                        }
+                        else
+                        {
+                            echo "<td></td>";
+                        }
+                        echo "<td><a class = \"admin-opt\" href = \"" . $this->url(array('id' => $file['fileID']), 'file_delete') . "\"><img src = \"" . $this->baseUrl("/public/styles/img/delete.png") . "\" alt = \"Usuń\" /></a></td>";
+                        echo "<td><img class=\"hidden\" id=\"img_" . $i . "\" src=\"" . $this->baseUrl('public/' . $file['url']) . "\" /></td>";
+                        echo "</tr>";
+                    }
+                    else
+                    {
+                        echo "</tr>";
+                    }
+
+                    $i++;
+                }
+
+                $object_num++;
             }
+
+            echo "</table>";
+
+            ?>
             
-            $object_num++;
-        }
-        
-        echo "</table>";
-        
-        ?>
         </p>
+</div>
+
+<div id = "album-options">
+    <table>
+        <tr>
+            <?php
+            //pobieranie w formie archiwum całego albumu
+            echo "<td><a class = \"admin-opt\" href=\"" . $this->url(array('id' => $this->id, 'download' => 0), 'compress_all') . "\"><img src=\"" . $this->baseUrl('public/styles/img/compress.png') . "\"</a></td>";
+            ?>
+        </tr>
+    </table>
 </div>

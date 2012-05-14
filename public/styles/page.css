@@ -82,6 +82,7 @@ img
 }
 
 #dandd { 
+ position: relative;
  float: left;
  color: #333;
  border: 0px solid red;
