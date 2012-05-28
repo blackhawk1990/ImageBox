@@ -116,10 +116,24 @@ class FileController extends Zend_Controller_Action
                 $file_table = new App_Model_File();
                 $this->view->file_data = $file_table->fetchAll($file_table->select()->where('userID=?', $request->getParam('id'))->order('data_dodania DESC'));
                 
-                //pobranie danych o userze (jego roli i id) z sesji
-                $storage = new Zend_Session_Namespace('user_data');
-                $this->view->user_role = $storage->role;
-                $this->view->user_id = $storage->id;
+                if (Zend_Auth::getInstance()->hasIdentity())
+                { //jezeli zalogowany
+                    //pobranie danych o userze (jego roli i id) z sesji
+                    $storage = new Zend_Session_Namespace('user_data');
+                    $this->view->user_role = $storage->role;
+                    $this->view->user_id = $storage->id;
+                    //nick użytkownika
+                    $this->view->user_name = Zend_Auth::getInstance()->getIdentity();
+                }
+                else
+                {
+                    $user = new App_Model_User();
+                    $user_data = $user->fetchRow($user->select('nick')->where('userID=?', $request->getParam('id')));
+                    
+                    $this->view->user_role = "";
+                    $this->view->user_id = "";
+                    $this->view->user_name = $user_data['nick'];
+                }
                 
                 $this->view->render('file/collection.phtml');
             }
@@ -212,10 +226,24 @@ class FileController extends Zend_Controller_Action
                 //odczyt z bazy danych
                 $view->file_data = $file_table->fetchAll($file_table->select()->where('userID=?', $file_data['userID'])->order('data_dodania DESC'));
 
-                //pobranie danych o userze (jego roli i id) z sesji
-                $storage = new Zend_Session_Namespace('user_data');
-                $view->user_role = $storage->role;
-                $view->user_id = $storage->id;
+                if (Zend_Auth::getInstance()->hasIdentity())
+                { //jezeli zalogowany
+                    //pobranie danych o userze (jego roli i id) z sesji
+                    $storage = new Zend_Session_Namespace('user_data');
+                    $view->user_role = $storage->role;
+                    $view->user_id = $storage->id;
+                    //nick użytkownika
+                    $view->user_name = Zend_Auth::getInstance()->getIdentity();
+                }
+                else
+                {
+                    $user = new App_Model_User();
+                    $user_data = $user->fetchRow($user->select('nick')->where('userID=?', $file_data['userID']));
+                    
+                    $view->user_role = "";
+                    $view->user_id = "";
+                    $view->user_name = $user_data['nick'];
+                }
                 
                 //dodanie sciezki i wyrenderowanie widoku kolekcji
                 $view->addScriptPath(APPLICATION_PATH . "/views/scripts/");
@@ -331,10 +359,24 @@ class FileController extends Zend_Controller_Action
                         $file_table = new App_Model_File();
                         $view->file_data = $file_table->fetchAll($file_table->select()->where('userID=?', $request->getParam('id'))->order('data_dodania DESC'));
 
-                        //pobranie danych o userze (jego roli i id) z sesji
-                        $storage = new Zend_Session_Namespace('user_data');
-                        $view->user_role = $storage->role;
-                        $view->user_id = $storage->id;
+                        if (Zend_Auth::getInstance()->hasIdentity())
+                        { //jezeli zalogowany
+                            //pobranie danych o userze (jego roli i id) z sesji
+                            $storage = new Zend_Session_Namespace('user_data');
+                            $view->user_role = $storage->role;
+                            $view->user_id = $storage->id;
+                            //nick użytkownika
+                            $view->user_name = Zend_Auth::getInstance()->getIdentity();
+                        }
+                        else
+                        {
+                            $user = new App_Model_User();
+                            $user_data = $user->fetchRow($user->select('nick')->where('userID=?', $request->getParam('id')));
+
+                            $view->user_role = "";
+                            $view->user_id = "";
+                            $view->user_name = $user_data['nick'];
+                        }
 
                         $view->headScript()->appendScript("
                             $(function()
