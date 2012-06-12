@@ -1,0 +1,16 @@
+@import url(http://fonts.googleapis.com/css?family=Electrolize);
+
+/*-------------------tooltip----------------------*/
+.tooltip
+{
+        width: 210px;
+        padding: 10px 5px;
+        background: url('images/tooltip.png');
+        background-size: 100% 100%;
+        display: none;
+        text-align: center;
+        font-family: "Times New Roman", Arial;
+        font-size: 1em;
+        color: #000;
+        z-index: 20;
+}

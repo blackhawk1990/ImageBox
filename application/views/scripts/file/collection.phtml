@@ -59,88 +59,125 @@
         
         <p>
             <?php
-
-            //init
-            $i = 0;
-            $object_num = 0;
-
-            echo "<table>";
-
-            //naglowek tablicy
-            echo "<tr><th colspan=5></th><th>Pobrań<th></th><th></th></tr>";
-
-            //sprawdzenie liczby plikow
-            foreach($this->file_data as $file)
+            
+            if(!$this->no_files)
             {
-                $i++;
-            }
+                //init
+                $i = 0;
+                $object_num = 0;
 
-            //utowrzenie tablicy w js do przechowywania liczby pobran i dynamicznego ich zwiekszania
-            echo "<script type=\"text/javascript\">
-                        var upload_num = new Array(" . $i . ");
-                    </script>";
+                echo "<table>";
 
-            $i = 0;
+                //naglowek tablicy
+                echo "<tr><th colspan=3></th><th class=\"icon measures-icon\"></th><th></th><th>Pobrań<th></th><th></th></tr>";
 
-            foreach($this->file_data as $file)
-            {
-                echo "<script type=\"text/javascript\">
-                        upload_num[" . $object_num . "] = " . $file['ilosc_pobran'] . ";
-                    </script>";
-
-                echo "<tr><td><a href=\"" . $this->url(array('id' => $file['fileID']), 'file_download') . "\" onclick=\"update(" . $object_num . ");\" title=\"Kliknij, aby pobrać plik\">" . $file['nazwa'] . "</a></td><td>Format: " . $file['format'] . "</td><td>Wielkość: " . $file['waga'] . " MB</td>";
-
-                if($file['format'] == "jpg" || $file['format'] == "JPG" || $file['format'] == "jpeg" || $file['format'] == "png")
+                //sprawdzenie liczby plikow
+                foreach($this->file_data as $file)
                 {
-                    $image_size = getimagesize($file['url']);
-
-                    echo "<td>Rozmiar: " . $image_size[0] . "x" . $image_size[1] . "</td>";
-                    echo "<td><a href=\"" . $this->url(array('id' => $file['fileID'], 'ext' => $file['format']), 'file_show') . "\"><img id=\"thumb_" . $i . "\" src=\"" . $this->baseUrl('public/' . $file['url']) . "\" width=100 height=80 /></a></td>";
-                }
-                else
-                {
-                    echo "<td></td>";
-                    echo "<td></td>";
-                }
-
-                //licznik pobran
-                echo "<td><div class=\"counter\" name=\"" . $file['ilosc_pobran'] . "\"></div></td>";
-
-                if(Zend_Auth::getInstance()->hasIdentity())
-                {
-                    if(($this->id == $this->user_id) || ($this->user_role == 'admin')) //widoczne tylko dla wlasciciela lub admina
-                    {
-                        //dla zdjec - edycja
-                        if(($file['format'] == "jpg" || $file['format'] == "png") && $this->user_role == 'premium-user')
-                        {
-                            echo "<td><a class = \"admin-opt\" href = \"#\" onclick=\"return launchEditor('img_" . $i . "');\"><img src = \"" . $this->baseUrl("/public/styles/img/edit.png") . "\" alt = \"Edytuj\" /></a></td>";
-                        }
-                        else
-                        {
-                            echo "<td></td>";
-                        }
-                        echo "<td><a class = \"admin-opt\" href = \"" . $this->url(array('id' => $file['fileID']), 'file_delete') . "\"><img src = \"" . $this->baseUrl("/public/styles/img/delete.png") . "\" alt = \"Usuń\" /></a></td>";
-                        echo "<td><img class=\"hidden\" id=\"img_" . $i . "\" src=\"" . $this->baseUrl('public/' . $file['url']) . "\" /></td>";
-                        echo "</tr>";
-                    }
-                    else
-                    {
-                        echo "</tr>";
-                    }
-
                     $i++;
                 }
 
-                $object_num++;
-            }
+                //utowrzenie tablicy w js do przechowywania liczby pobran i dynamicznego ich zwiekszania
+                echo "<script type=\"text/javascript\">
+                            var upload_num = new Array(" . $i . ");
+                        </script>";
 
-            echo "</table>";
+                $i = 0;
+
+                foreach($this->file_data as $file)
+                {
+                    echo "<script type=\"text/javascript\">
+                            upload_num[" . $object_num . "] = " . $file['ilosc_pobran'] . ";
+                        </script>";
+
+                    echo "<tr><td><a href=\"" . $this->url(array('id' => $file['fileID']), 'file_download') . "\" onclick=\"update(" . $object_num . ");\" title=\"Kliknij, aby pobrać plik\">" . $file['nazwa'] . "</a></td>";
+
+                    //ikonki formatu
+                    if($file['format'] == "jpg" || $file['format'] == "JPG" || $file['format'] == "jpeg" || $file['format'] == "png" || $file['format'] == "pdf" || $file['format'] == "mp3")
+                    {
+                        if ($file['format'] == "JPG" || $file['format'] == "jpeg") //na wypadek innych oznaczen jpg
+                        {
+                            echo "<td class=\"icon jpg-icon\"></td><td class=\"highlighted\">Wielkość: " . $file['waga'] . " MB</td>";
+                        }
+                        else
+                        {
+                            echo "<td class=\"icon " . $file['format'] . "-icon\"></td><td class=\"highlighted\">Wielkość: " . $file['waga'] . " MB</td>";
+                        }
+                    }
+                    else
+                    {
+                        echo "<td>Format: " . $file['format'] . "</td><td class=\"highlighted\">Wielkość: " . $file['waga'] . " MB</td>";
+                    }
+
+                    if($file['format'] == "jpg" || $file['format'] == "JPG" || $file['format'] == "jpeg" || $file['format'] == "png")
+                    {
+                        $image_size = getimagesize($file['url']);
+
+                        echo "<td class=\"highlighted\">" . $image_size[0] . "x" . $image_size[1] . "</td>";
+                        echo "<td><a href=\"" . $this->url(array('id' => $file['fileID'], 'ext' => $file['format']), 'file_show') . "\"><img id=\"thumb_" . $i . "\" src=\"" . $this->baseUrl('public/' . $file['url']) . "\" width=100 height=80 /></a></td>";
+                    }
+                    else
+                    {
+                        echo "<td></td>";
+                        echo "<td></td>";
+                    }
+
+                    //licznik pobran
+                    echo "<td><div class=\"counter\" name=\"" . $file['ilosc_pobran'] . "\"></div></td>";
+
+                    if(Zend_Auth::getInstance()->hasIdentity())
+                    {
+                        if(($this->id == $this->user_id) || ($this->user_role == 'admin')) //widoczne tylko dla wlasciciela lub admina
+                        {
+                            //dla zdjec - edycja
+                            if(($file['format'] == "jpg" || $file['format'] == "png") && $this->user_role == 'premium-user')
+                            {
+                                echo "<td><a class = \"admin-opt\" href = \"#\" onclick=\"return launchEditor('img_" . $i . "');\"><img src = \"" . $this->baseUrl("/public/styles/img/edit.png") . "\" alt = \"Edytuj\" /></a></td>";
+                            }
+                            else
+                            {
+                                echo "<td></td>";
+                            }
+                            echo "<td><a class = \"admin-opt\" href = \"" . $this->url(array('id' => $file['fileID']), 'file_delete') . "\"><img src = \"" . $this->baseUrl("/public/styles/img/delete.png") . "\" alt = \"Usuń\" /></a></td>";
+                            echo "<td><img class=\"hidden\" id=\"img_" . $i . "\" src=\"" . $this->baseUrl('public/' . $file['url']) . "\" /></td>";
+                            echo "</tr>";
+                        }
+                        else
+                        {
+                            echo "</tr>";
+                        }
+
+                        $i++;
+                    }
+
+                    $object_num++;
+                }
+
+                echo "</table>";
+            }
+            else
+            {
+                //jezeli zalogowany, to zacheta do wrzucenia
+                if(Zend_Auth::getInstance()->hasIdentity())
+                {
+                    if($this->id == $this->user_id) //widoczne tylko dla wlasciciela
+                    {
+                        echo "Nie wrzuciłeś jeszcze żadnych plików? Zmień to i <a href=\"" . $this->url(array('id' => $this->id), 'upload') . "\">kliknij tu</a>, aby wrzucić swoje pliki!";
+                    }
+                }
+                else
+                {
+                    echo "Ten użytkownik nie posiada żadnych plików!";
+                }
+            }
 
             ?>
             
         </p>
 </div>
 
+<!--dodatkowe opcje tylko przy dostępnym co najmniej jednym pliku-->
+<?php if(!$this->no_files): ?>
 <div id = "album-options">
     <table>
         <tr>
@@ -151,3 +188,4 @@
         </tr>
     </table>
 </div>
+<?php endif; ?>

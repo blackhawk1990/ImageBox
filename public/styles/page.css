@@ -78,7 +78,12 @@ img
 
 #logon #normal-login
 {
-    height: 77px;
+    height: 55px;
+}
+
+#register-text
+{
+    margin: 2px;
 }
 
 #dandd { 

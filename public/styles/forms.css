@@ -7,10 +7,10 @@
 {
     height: 37px;
     width: 338px;
-    padding: 5px;
+    padding: 2px 5px;
 }
 
-#logform .logowanie
+.logowanie
 {
     margin-top: 3px;
     height: 15px;
@@ -22,12 +22,12 @@
     color: #000;
 }
 
-#logform .logowanie:hover
+.logowanie:hover
 {
     outline: solid thick rgb(255, 180, 0);
 }
 
-#logform .logowanie:focus
+.logowanie:focus
 {
     outline: solid thick rgb(255, 180, 0);
 }
@@ -40,7 +40,7 @@
 #logform #login-label,
 #logform #password-label
 {
-    margin-top: 23px;
+    margin-top: 13px;
 }
 
 #logform .login
@@ -62,7 +62,7 @@
 #logform dt
 {
     float: left;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 #logform dd
@@ -73,6 +73,40 @@
 #logform dt
 {
     padding: 3px 2px 0 0;
+}
+
+#regform
+{
+    width: 200px;
+    margin: 0 auto;
+}
+
+#regform .logowanie
+{
+    width: 200px;
+    text-align: center;
+}
+
+#regform #submit
+{
+    width: 100%;
+}
+
+#regform #submit-element
+{
+    width: 18px;
+    margin: 0 auto;
+}
+
+#regform dt
+{
+    margin-top: 5px;
+}
+
+#actform
+{
+    width: 100px;
+    margin: 20px auto;
 }
 
 #edit-form #cancel-element,

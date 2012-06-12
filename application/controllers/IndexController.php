@@ -7,6 +7,12 @@ class IndexController extends Zend_Controller_Action
     {
         $this->view->baseUrl = $this->_request->getBaseUrl();
         $this->_auth = Zend_Auth::getInstance();
+        
+        $this->storage = new Zend_Session_Namespace('user_data');
+        if(!$this->_auth->hasIdentity()) //nie zalogowany
+        {
+            $this->storage->role = "not-logged";
+        }
     }
 
     public function indexAction()

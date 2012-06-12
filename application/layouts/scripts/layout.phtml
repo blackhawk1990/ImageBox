@@ -62,7 +62,7 @@
                 <div id="header">
                     <a href = "<?php echo $this->url(array('controller' => 'index', 'action' => 'index'), 'mainpage') ?>">
                         <div id="logo">
-                            <lg>ImageBox</lg>
+                            <img src="<?php echo $this->baseUrl('public/styles/img/logo.png') ?>" />
                         </div>
                     </a>
                 </div>
@@ -96,13 +96,20 @@
                                 echo "<div style=\"text-align:center\">" . $this->logerror . "</div>";
                             } else {
                                 echo "<div id=\"log-status\">";
-                                echo "<p style=\"text-align:center\">Witaj <a href=\"".$this->url(array('controller' => 'user', 'action' => 'profile', 'id' => $id), 'profile')."\">" . $ident->getIdentity() . "</a>! <a href = \"" . $this->url(array('controller' => 'auth', 'action' => 'logout'), 'logout') . "\">Wyloguj</a></p>";
+                                echo "<p style=\"text-align:center\"><a href=\"".$this->url(array('controller' => 'user', 'action' => 'profile', 'id' => $id), 'profile')."\">" . $ident->getIdentity() . "</a>! <a href = \"" . $this->url(array('controller' => 'auth', 'action' => 'logout'), 'logout') . "\">Wyloguj</a></p>";
                                 //$storage = new Zend_Session_Namespace('user_role');
                                 //echo "Rola:".$storage->role;
                                 echo "</div>";
                             }
                             ?>
                         </div>
+                        
+                        <?php
+                        if (!$ident->hasIdentity() && !$this->register) //zacheta do rejestracji dla niezalogowanych
+                        {
+                            echo "<div id=\"register-text\">Nie masz jeszcze konta? <a href=\"" . $this->url(array(), 'register') . "\">Zarejestruj się</a></div>";
+                        }
+                        ?>
                         
                         <?php if (!$ident->hasIdentity()) : ?>
                             <iframe src="https://www.facebook.com/plugins/registration?

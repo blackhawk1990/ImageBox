@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `Users` (
   `password` varchar(50) default NULL,
   `ranga` varchar(50) default NULL,
   `wolne_miejsce` int(11) NOT NULL default '1024',
-  `limit_wielkości` enum('1024','2048','5120','10240') NOT NULL,
+  `limit_wielkosci` enum('1024','2048','5120','10240') NOT NULL,
   `rola` enum('admin','user','premium-user','not-logged') default NULL,
   `userID` int(11) NOT NULL auto_increment,
   PRIMARY KEY  (`userID`)
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `Users` (
 -- Zrzut danych tabeli `Users`
 --
 
-INSERT INTO `Users` (`avatar`, `email`, `nick`, `password`, `ranga`, `wolne_miejsce`, `limit_wielkości`, `rola`, `userID`) VALUES
+INSERT INTO `Users` (`avatar`, `email`, `nick`, `password`, `ranga`, `wolne_miejsce`, `limit_wielkosci`, `rola`, `userID`) VALUES
 ('http://i587.photobucket.com/albums/ss317/mitch7896/twitter-bird-2-300x300.png', 'poniatek1@wp.pl', 'Poniatek', 'Poniatek', 'PRO', 1024, '1024', 'admin', 1),
 ('http://girl-wonder.org/web300x300px_72dpi_wecan.gif', 'poniatek@wp.pl', 'Robert', 'Robert', 'nowy', 1024, '1024', 'user', 2),
 ('http://macmcrae.com/wp-content/uploads/2007/09/_skull-300x300.jpg', 'bolek@gmail.com', 'Bolek', 'Bolek', 'nowy', 1024, '5120', 'premium-user', 3),

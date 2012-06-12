@@ -1,0 +1,62 @@
+#view-content
+{
+    margin-bottom: 20px;
+}
+
+#file-list
+{
+    margin-top: 20px;
+}
+
+#album-options
+{
+    position: absolute;
+    width: 90%;
+    height: 24px;
+    padding: 3px 5% 5px 5%;
+    margin: 0 auto;
+    bottom: 0px;
+    left: 0px;
+    background: rgba(47, 79, 79, 0.4);
+}
+
+#album-options td
+{
+    padding: 0;
+}
+
+.icon
+{
+    width: 32px;
+    height: 32px;
+}
+
+.measures-icon
+{
+    background: url('images/Measures.png') no-repeat center;
+}
+
+.jpg-icon
+{
+    background: url('images/JPG.png') no-repeat center;
+}
+
+.mp3-icon
+{
+    background: url('images/MP3.png') no-repeat center;
+}
+
+.png-icon
+{
+    background: url('images/PNG.png') no-repeat center;
+}
+
+.pdf-icon
+{
+    background: url('images/PDF.png') no-repeat center;
+}
+
+.highlighted
+{
+    background: rgba(47, 150, 79, 0.6);
+}

@@ -1,4 +1,53 @@
-<br /><br />
-<div id="view-content">
-	<p>View script for controller <b>User</b> and script/action name <b>profile</b></p>
+<script type="text/javascript">
+    $(function(){
+        $('#capacity-progressbar').progressbar({
+           value: <?php echo $this->user_files_free_capacity ?>,
+           max: <?php echo $this->user_files_capacity ?>
+        });
+    });
+</script>
+
+<table id="profile-header">
+    <tr>
+        <td id="avatar"><img src="<?php echo $this->user_avatar_path ?>" /></td>
+        <td id="nick"><?php echo $this->user_name ?></td>
+    </tr>
+</table>
+
+<h2>STATYSTYKI</h2>
+
+<table>
+    <tr>
+        <td class="info">Liczba punktów</td> <td class="value"><?php echo $this->number_of_files != 0 ? round($this->number_of_file_downloads / $this->number_of_files) : '0' ?></td>
+    </tr>
+    <tr>
+        <td class="info">Wolne/całkowite miejsce</td> <td class="value"><?php echo $this->user_files_free_capacity . '/' . $this->user_files_capacity . " MB" ?></td>
+        <td id="capacity-progressbar"></td>
+    </tr>
+    
+    <?php if($this->user_role == 'premium-user' || $this->user_role == 'admin'): //tylko dla uzytkownikow premium i admina ?>
+    
+    <tr>
+        <td class="info">Ilość wrzuconych plików</td> <td class="value"><?php echo $this->number_of_files ?></td>
+    </tr>
+    <tr>
+        <td class="info">Liczba pobrań</td> <td class="value"><?php echo $this->number_of_file_downloads ?></td>
+    </tr>
+    
+    <?php endif; ?>
+</table>
+
+<div id = "profile-options">
+    <table>
+        <tr>
+            <?php
+                //edycja profilu
+                echo "<td><a class = \"admin-opt\" href=\"#\" title=\"Edytuj profil\"><img src=\"" . $this->baseUrl('public/styles/img/profile_edit.png') . "\"</a></td>";
+                //zmiana typu konta
+                echo "<td><a class = \"admin-opt\" href=\"" . $this->url(array('id' => $this->id), 'premium') . "\" title=\"Zostań premium\"><img src=\"" . $this->baseUrl('public/styles/img/premium_user.png') . "\"</a></td>";
+                //wyslanie zaproszenia
+                echo "<td><a class = \"admin-opt\" href=\"#\" title=\"Wyślij zaproszenie\"><img src=\"" . $this->baseUrl('public/styles/img/invitation.png') . "\"</a></td>";
+            ?>
+        </tr>
+    </table>
 </div>

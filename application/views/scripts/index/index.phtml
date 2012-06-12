@@ -33,7 +33,7 @@
         //pobranie roli uzytkownika do weryfikacji
         $storage = new Zend_Session_Namespace('user_data');
         
-        echo "Rola: ".$storage->role;
+        //echo "Rola: ".$storage->role;
         
         if(Zend_Registry::get('acl')->isAllowed($storage->role, 'news-admin-opt')) //newsy z opcajmi admina
         {

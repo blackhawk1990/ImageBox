@@ -47,6 +47,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $acl->allow('not-logged', 'news-read');
         
         Zend_Registry::set('acl', $acl);
-                
+        
+        Zend_Registry::set('avatar_path', 'avatar');
     }
 }

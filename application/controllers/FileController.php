@@ -86,6 +86,14 @@ class FileController extends Zend_Controller_Action
                 
                 $file_table->insert($file_data);
                 
+                //aktualizacja danych uzytkownika
+                $user_table = new App_Model_User();
+                $user_data = $user_table->fetchRow($user_table->select('wolne_miejsce')->where('userID=?', $request->getParam('id')));
+                //tymczasowa nowa ilosc wolnego miejsca
+                $free_capacity = $user_data['wolne_miejsce'] - $file_data['waga'];
+                //wstawienie nowcyh danych do bazy
+                $user_table->update(array('wolne_miejsce' => $free_capacity), 'userID=' . $request->getParam('id'));
+                
                 $this->_helper->redirector->goToRoute(array('id' => $request->getParam('id')), 'collection');
             }
         }
@@ -104,13 +112,14 @@ class FileController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($this->_request->getBaseUrl().'/public/js/feather.js');
         $this->view->headScript()->appendFile($this->_request->getBaseUrl().'/public/js/jquery.counter.js');
         //dolaczenie styli
-        $this->view->headLink()->appendStylesheet($this->_request->getBaseUrl().'/public/styles/collection.css');
+        $this->view->headLink()->appendStylesheet($this->_request->getBaseUrl().'/public/styles/ui/collection.css');
         
         if($request->isGet())
         {
             if($request->getParam('id') != '')
             {
                 $this->view->id = $request->getParam('id');
+                $this->view->no_files = 0;
                 
                 //odczyt z bazy danych
                 $file_table = new App_Model_File();
@@ -124,6 +133,11 @@ class FileController extends Zend_Controller_Action
                     $this->view->user_id = $storage->id;
                     //nick użytkownika
                     $this->view->user_name = Zend_Auth::getInstance()->getIdentity();
+                    
+                    if($this->view->file_data->count() == 0)
+                    {
+                        $this->view->no_files = 1;
+                    }
                 }
                 else
                 {
@@ -133,6 +147,11 @@ class FileController extends Zend_Controller_Action
                     $this->view->user_role = "";
                     $this->view->user_id = "";
                     $this->view->user_name = $user_data['nick'];
+                    
+                    if($this->view->file_data->count() == 0)
+                    {
+                        $this->view->no_files = 1;
+                    }
                 }
                 
                 $this->view->render('file/collection.phtml');
@@ -163,7 +182,19 @@ class FileController extends Zend_Controller_Action
                 //kasowanie pliku
                 unlink($this->view->file['url']);
                 
+                //tymczasowy rozmiar pliku i id usera
+                $file_size = $this->view->file['waga'];
+                $user_id = $this->view->file['userID'];
+                
                 $file_table->delete('fileID=' . $request->getParam('id'));
+                
+                //aktualizacja danych uzytkownika
+                $user_table = new App_Model_User();
+                $user_data = $user_table->fetchRow($user_table->select('wolne_miejsce')->where('userID=?', $user_id));
+                //tymczasowa nowa ilosc wolnego miejsca
+                $free_capacity = $user_data['wolne_miejsce'] + $file_size;
+                //wstawienie nowcyh danych do bazy
+                $user_table->update(array('wolne_miejsce' => $free_capacity), 'userID=' . $user_id);
             }
         
         }
@@ -181,7 +212,7 @@ class FileController extends Zend_Controller_Action
         $view->headScript()->appendFile($this->_request->getBaseUrl().'/public/js/feather.js');
         $view->headScript()->appendFile($this->_request->getBaseUrl().'/public/js/jquery.counter.js');
         //dolaczenie styli
-        $view->headLink()->appendStylesheet($this->_request->getBaseUrl().'/public/styles/collection.css');
+        $view->headLink()->appendStylesheet($this->_request->getBaseUrl().'/public/styles/ui/collection.css');
         
         $request = $this->getRequest();
         
@@ -303,7 +334,7 @@ class FileController extends Zend_Controller_Action
         $view->headScript()->appendFile($this->_request->getBaseUrl().'/public/js/feather.js');
         $view->headScript()->appendFile($this->_request->getBaseUrl().'/public/js/jquery.counter.js');
         //dolaczenie styli
-        $view->headLink()->appendStylesheet($this->_request->getBaseUrl().'/public/styles/collection.css');
+        $view->headLink()->appendStylesheet($this->_request->getBaseUrl().'/public/styles/ui/collection.css');
         
         //jezeli przeslano dane getem
         if($request->isGet())

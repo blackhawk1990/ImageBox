@@ -1,0 +1,64 @@
+#profile-header
+{
+    margin-bottom: 20px;
+}
+
+#nick
+{
+    padding: 0 20px;
+    font-family: "Segoe UI";
+    font-size: 2em;
+    color: orange;
+    text-align: center;
+}
+
+#avatar
+{
+    margin-right: 20px;
+    box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.8);
+}
+
+#avatar img
+{
+    width: 140px;
+    height: 110px;
+}
+
+.info
+{
+    padding: 10px;
+    font-size: 1.2em;
+    color: orange;
+    text-align: center;
+}
+
+.value
+{
+    width: 200px;
+    font-size: 1.2em;
+    color: white;
+    text-align: center;
+}
+
+#capacity-progressbar
+{
+    width: 200px;
+}
+
+#profile-options
+{
+    position: absolute;
+    width: 90%;
+    height: 24px;
+    padding: 3px 5% 5px 5%;
+    margin: 0 auto;
+    bottom: 0px;
+    left: 0px;
+    background: rgba(47, 79, 79, 0.4);
+}
+
+#profile-options td
+{
+    padding: 0 10px;
+    border-right: solid thin white;
+}
